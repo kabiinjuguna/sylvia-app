@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes" />
-  <title>Sylvia · ISLE MEDIA / ISLE POINT</title>
+  <title>Sylvia · Futuristic Financial Suite</title>
 
   <!-- PWA / iOS meta -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -11,11 +11,12 @@
   <meta name="theme-color" id="themeColor" content="#0b1a33" />
   <link rel="manifest" href='data:application/manifest+json,{"name":"Sylvia","short_name":"Sylvia","start_url":".","display":"standalone","background_color":"#0b1a33","theme_color":"#0b1a33","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23f5b342%22/><text x=%2250%22 y=%2265%22 font-size=%2245%22 text-anchor=%22middle%22 fill=%22%230b1a33%22 font-weight=%22bold%22>S</text></svg>","sizes":"any","type":"image/svg+xml"}]}' />
 
-  <!-- Fonts & Icons -->
+  <!-- Fonts & Icons & PDF Library -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
     /* ===== RESET & VARIABLES ===== */
@@ -54,343 +55,106 @@
     }
 
     /* Animated background waves */
-    .bg-waves {
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      overflow:hidden;
-    }
-    .bg-waves svg {
-      position:absolute;
-      bottom:0;
-      width:100%;
-      height:40%;
-      opacity:0.08;
-      animation:waveMove 20s linear infinite;
-    }
-    @keyframes waveMove {
-      0% { transform:translateX(0); }
-      100% { transform:translateX(-50%); }
-    }
-    .bg-lines {
-      position:fixed;
-      inset:0;
-      z-index:0;
-      pointer-events:none;
-      background:linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-      background-size:40px 100%;
-      animation:lineScroll 15s linear infinite;
-    }
-    @keyframes lineScroll {
-      0% { transform:translateX(0); }
-      100% { transform:translateX(40px); }
-    }
+    .bg-waves { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+    .bg-waves svg { position:absolute; bottom:0; width:100%; height:40%; opacity:0.08; animation:waveMove 20s linear infinite; }
+    @keyframes waveMove { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
+    .bg-lines { position:fixed; inset:0; z-index:0; pointer-events:none; background:linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size:40px 100%; animation:lineScroll 15s linear infinite; }
+    @keyframes lineScroll { 0% { transform:translateX(0); } 100% { transform:translateX(40px); } }
 
     /* ===== SIDEBAR ===== */
     .sidebar {
-      width:280px;
-      background:linear-gradient(135deg,#0b1a33 0%,#1a2a4a 100%);
-      backdrop-filter:blur(20px);
-      display:flex;
-      flex-direction:column;
-      padding:24px 0 16px 0;
-      position:fixed;
-      top:0;
-      left:0;
-      bottom:0;
-      z-index:100;
-      transition:transform 0.4s cubic-bezier(0.4,0,0.2,1);
-      overflow-y:auto;
-      transform:translateX(-100%);
+      width:280px; background:linear-gradient(135deg,#0b1a33 0%,#1a2a4a 100%); backdrop-filter:blur(20px);
+      display:flex; flex-direction:column; padding:24px 0 16px 0; position:fixed; top:0; left:0; bottom:0; z-index:100;
+      transition:transform 0.4s cubic-bezier(0.4,0,0.2,1); overflow-y:auto; transform:translateX(-100%);
     }
     .sidebar.open { transform:translateX(0); }
-    .sidebar-brand {
-      padding:0 24px 28px 24px;
-      border-bottom:1px solid rgba(255,255,255,0.05);
-      display:flex;
-      align-items:center;
-      gap:14px;
-    }
+    .sidebar-brand { padding:0 24px 28px 24px; border-bottom:1px solid rgba(255,255,255,0.05); display:flex; align-items:center; gap:14px; }
     .sidebar-brand .logo-wrap {
-      width:48px; height:48px; border-radius:14px;
-      background:linear-gradient(135deg,#f5b342,#d4880f);
-      display:flex; align-items:center; justify-content:center;
-      font-weight:900; font-size:1.4rem; color:#0a0e1a;
-      flex-shrink:0; overflow:hidden;
-      box-shadow:0 0 30px rgba(245,179,66,0.2);
+      width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg,#f5b342,#d4880f);
+      display:flex; align-items:center; justify-content:center; font-weight:900; font-size:1.4rem; color:#0a0e1a;
+      flex-shrink:0; overflow:hidden; box-shadow:0 0 30px rgba(245,179,66,0.2);
     }
     .sidebar-brand .logo-wrap img { width:100%; height:100%; object-fit:cover; }
-    .sidebar-brand h1 {
-      font-size:1.5rem; font-weight:800; color:#fff;
-      background:linear-gradient(135deg,#fff,#c8d6e5);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-    }
+    .sidebar-brand h1 { font-size:1.5rem; font-weight:800; color:#fff; background:linear-gradient(135deg,#fff,#c8d6e5); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
     .sidebar-brand h1 span { -webkit-text-fill-color:var(--neon); }
     .sidebar-brand small { font-size:0.6rem; opacity:0.4; display:block; margin-top:2px; color:#8895aa; }
 
-    .company-switcher {
-      padding:12px 20px;
-      border-bottom:1px solid rgba(255,255,255,0.05);
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-    }
+    .company-switcher { padding:12px 20px; border-bottom:1px solid rgba(255,255,255,0.05); display:flex; gap:8px; flex-wrap:wrap; }
     .company-switcher .cmp-btn {
-      flex:1;
-      padding:8px 12px;
-      border-radius:30px;
-      border:1px solid rgba(255,255,255,0.08);
-      background:transparent;
-      color:#8895aa;
-      font-weight:600;
-      font-size:0.75rem;
-      cursor:pointer;
-      transition:var(--transition);
-      text-align:center;
-      min-height:36px;
+      flex:1; padding:8px 12px; border-radius:30px; border:1px solid rgba(255,255,255,0.08); background:transparent;
+      color:#8895aa; font-weight:600; font-size:0.75rem; cursor:pointer; transition:var(--transition); text-align:center; min-height:36px;
     }
-    .company-switcher .cmp-btn.active {
-      background:var(--neon);
-      color:#0a0e1a;
-      border-color:var(--neon);
-      box-shadow:0 0 20px rgba(245,179,66,0.2);
-    }
+    .company-switcher .cmp-btn.active { background:var(--neon); color:#0a0e1a; border-color:var(--neon); box-shadow:0 0 20px rgba(245,179,66,0.2); }
 
-    .sidebar-nav {
-      flex:1;
-      padding:20px 12px;
-    }
-    .sidebar-nav .nav-label {
-      font-size:0.6rem;
-      text-transform:uppercase;
-      letter-spacing:2px;
-      opacity:0.3;
-      padding:0 12px;
-      margin:18px 0 8px 0;
-      color:#8895aa;
-      font-weight:600;
-    }
+    .sidebar-nav { flex:1; padding:20px 12px; }
+    .sidebar-nav .nav-label { font-size:0.6rem; text-transform:uppercase; letter-spacing:2px; opacity:0.3; padding:0 12px; margin:18px 0 8px 0; color:#8895aa; font-weight:600; }
     .sidebar-nav .nav-label:first-of-type { margin-top:0; }
     .sidebar-nav a {
-      display:flex;
-      align-items:center;
-      gap:14px;
-      padding:12px 16px;
-      border-radius:12px;
-      font-size:0.95rem;
-      font-weight:600;
-      color:#8895aa;
-      transition:var(--transition);
-      margin-bottom:2px;
-      min-height:48px;
-      position:relative;
+      display:flex; align-items:center; gap:14px; padding:12px 16px; border-radius:12px; font-size:0.95rem;
+      font-weight:600; color:#8895aa; transition:var(--transition); margin-bottom:2px; min-height:48px; position:relative;
     }
     .sidebar-nav a i { width:24px; font-size:1.2rem; text-align:center; color:#5a6a82; transition:0.2s; }
-    .sidebar-nav a:hover, .sidebar-nav a.active {
-      background:rgba(245,179,66,0.08);
-      color:#fff;
-    }
+    .sidebar-nav a:hover, .sidebar-nav a.active { background:rgba(245,179,66,0.08); color:#fff; }
     .sidebar-nav a:hover i, .sidebar-nav a.active i { color:var(--neon); text-shadow:0 0 20px rgba(245,179,66,0.3); }
     .sidebar-nav a.active::before {
-      content:'';
-      position:absolute;
-      left:0;
-      top:20%;
-      height:60%;
-      width:3px;
-      background:var(--neon);
-      border-radius:0 4px 4px 0;
-      box-shadow:var(--neon-glow);
+      content:''; position:absolute; left:0; top:20%; height:60%; width:3px; background:var(--neon); border-radius:0 4px 4px 0; box-shadow:var(--neon-glow);
     }
-    .sidebar-footer {
-      padding:16px 24px 0;
-      border-top:1px solid rgba(255,255,255,0.04);
-      font-size:0.6rem;
-      opacity:0.3;
-      text-align:center;
-      color:#8895aa;
-    }
+    .sidebar-footer { padding:16px 24px 0; border-top:1px solid rgba(255,255,255,0.04); font-size:0.6rem; opacity:0.3; text-align:center; color:#8895aa; }
 
     /* ===== MAIN ===== */
-    .main {
-      margin-left:0;
-      flex:1;
-      padding:20px 16px 40px;
-      min-height:100vh;
-      width:100%;
-      position:relative;
-      z-index:1;
-    }
-
-    .topbar {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:28px;
-      flex-wrap:wrap;
-      gap:12px;
-      padding:0 4px;
-    }
+    .main { margin-left:0; flex:1; padding:20px 16px 40px; min-height:100vh; width:100%; position:relative; z-index:1; }
+    .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; flex-wrap:wrap; gap:12px; padding:0 4px; }
     .topbar .left { display:flex; align-items:center; gap:16px; }
-    .topbar h2 {
-      font-size:1.6rem;
-      font-weight:800;
-      background:linear-gradient(135deg, var(--text), var(--neon));
-      -webkit-background-clip:text;
-      -webkit-text-fill-color:transparent;
-    }
+    .topbar h2 { font-size:1.6rem; font-weight:800; background:linear-gradient(135deg, var(--text), var(--neon)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
     .topbar h2 small { font-weight:500; font-size:0.8rem; color:var(--text-muted); -webkit-text-fill-color:var(--text-muted); margin-left:10px; }
-    .topbar-actions {
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
+    .topbar-actions { display:flex; gap:10px; align-items:center; flex-wrap:wrap; }
     .topbar-actions .voice-btn {
-      background:linear-gradient(135deg,#f5b342,#d4880f);
-      color:#0a0e1a;
-      border:none;
-      padding:10px 24px;
-      border-radius:50px;
-      font-weight:700;
-      font-size:0.95rem;
-      display:flex;
-      align-items:center;
-      gap:10px;
-      min-height:48px;
-      transition:var(--transition);
-      box-shadow:0 4px 30px rgba(245,179,66,0.25);
-      cursor:pointer;
+      background:linear-gradient(135deg,#f5b342,#d4880f); color:#0a0e1a; border:none; padding:10px 24px; border-radius:50px;
+      font-weight:700; font-size:0.95rem; display:flex; align-items:center; gap:10px; min-height:48px; transition:var(--transition);
+      box-shadow:0 4px 30px rgba(245,179,66,0.25); cursor:pointer;
     }
     .topbar-actions .voice-btn:hover { transform:scale(1.04); box-shadow:0 8px 50px rgba(245,179,66,0.4); }
     .topbar-actions .voice-btn.listening { background:linear-gradient(135deg,#e74c3c,#c0392b); animation:pulseGlow 1s infinite; }
     .topbar-actions .voice-btn i { font-size:1.1rem; }
     .topbar-actions .voice-status {
-      font-size:0.75rem;
-      color:var(--text-muted);
-      background:var(--bg-card);
-      padding:6px 18px;
-      border-radius:50px;
-      border:1px solid var(--border);
-      min-height:36px;
-      display:flex;
-      align-items:center;
-      gap:8px;
-      white-space:nowrap;
-      backdrop-filter:blur(10px);
+      font-size:0.75rem; color:var(--text-muted); background:var(--bg-card); padding:6px 18px; border-radius:50px;
+      border:1px solid var(--border); min-height:36px; display:flex; align-items:center; gap:8px; white-space:nowrap; backdrop-filter:blur(10px);
     }
-    .topbar-actions .voice-status .dot {
-      display:inline-block;
-      width:8px;
-      height:8px;
-      border-radius:50%;
-      background:#2ecc71;
-      box-shadow:0 0 10px #2ecc71;
-    }
+    .topbar-actions .voice-status .dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#2ecc71; box-shadow:0 0 10px #2ecc71; }
     .topbar-actions .voice-status .dot.inactive { background:var(--text-muted); box-shadow:none; }
     #sidebarToggle, #themeToggle {
-      background:var(--bg-card);
-      border:1px solid var(--border);
-      border-radius:50px;
-      padding:0 18px;
-      min-height:48px;
-      font-size:1.2rem;
-      color:var(--text);
-      display:flex;
-      align-items:center;
-      transition:0.2s;
-      cursor:pointer;
-      backdrop-filter:blur(10px);
+      background:var(--bg-card); border:1px solid var(--border); border-radius:50px; padding:0 18px; min-height:48px;
+      font-size:1.2rem; color:var(--text); display:flex; align-items:center; transition:0.2s; cursor:pointer; backdrop-filter:blur(10px);
     }
-    #sidebarToggle:hover, #themeToggle:hover { background:var(--border); }
-    @keyframes pulseGlow {
-      0%,100% { box-shadow:0 0 0 0 rgba(231,76,60,0.4); }
-      50% { box-shadow:0 0 0 16px rgba(231,76,60,0); }
-    }
+    @keyframes pulseGlow { 0%,100% { box-shadow:0 0 0 0 rgba(231,76,60,0.4); } 50% { box-shadow:0 0 0 16px rgba(231,76,60,0); } }
 
-    .stats-grid {
-      display:grid;
-      grid-template-columns:repeat(auto-fit, minmax(150px,1fr));
-      gap:16px;
-      margin-bottom:28px;
-    }
+    .stats-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(150px,1fr)); gap:16px; margin-bottom:28px; }
     .stat-card {
-      background:var(--bg-card);
-      backdrop-filter:blur(20px);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:18px 22px;
-      transition:var(--transition);
-      min-height:88px;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      box-shadow:var(--shadow);
-      position:relative;
-      overflow:hidden;
+      background:var(--bg-card); backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:var(--radius); padding:18px 22px;
+      transition:var(--transition); min-height:88px; display:flex; flex-direction:column; justify-content:center; box-shadow:var(--shadow); position:relative; overflow:hidden;
     }
-    .stat-card::before {
-      content:'';
-      position:absolute;
-      top:-50%;
-      right:-50%;
-      width:100%;
-      height:100%;
-      background:radial-gradient(circle, rgba(245,179,66,0.03), transparent 70%);
-      pointer-events:none;
-    }
+    .stat-card::before { content:''; position:absolute; top:-50%; right:-50%; width:100%; height:100%; background:radial-gradient(circle, rgba(245,179,66,0.03), transparent 70%); pointer-events:none; }
     .stat-card:hover { transform:translateY(-4px); box-shadow:0 20px 40px rgba(0,0,0,0.08); border-color:var(--neon); }
     .stat-card .label { font-size:0.6rem; text-transform:uppercase; letter-spacing:1px; color:var(--text-muted); font-weight:700; }
     .stat-card .value { font-size:1.8rem; font-weight:800; color:var(--text); margin-top:2px; }
     .stat-card .value small { font-size:0.7rem; font-weight:500; color:var(--text-muted); margin-left:4px; }
     .stat-card .neon-glow { color:var(--neon); text-shadow:0 0 30px rgba(245,179,66,0.2); }
 
-    .page {
-      display:none;
-      animation:fadeSlide 0.5s cubic-bezier(0.4,0,0.2,1);
-    }
+    .page { display:none; animation:fadeSlide 0.5s cubic-bezier(0.4,0,0.2,1); }
     .page.active { display:block; }
     @keyframes fadeSlide { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
-
-    .page-header {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:14px;
-      margin-bottom:22px;
-    }
+    .page-header { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px; margin-bottom:22px; }
     .page-header h3 { font-size:1.3rem; font-weight:700; color:var(--text); }
     .page-header h3 i { color:var(--neon); margin-right:10px; text-shadow:0 0 20px rgba(245,179,66,0.2); }
     .page-header .actions { display:flex; gap:10px; flex-wrap:wrap; }
 
     .btn {
-      padding:10px 24px;
-      border-radius:50px;
-      border:none;
-      font-weight:600;
-      font-size:0.85rem;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-      transition:var(--transition);
-      min-height:44px;
-      touch-action:manipulation;
-      background:var(--bg-card);
-      color:var(--text);
-      border:1px solid var(--border);
-      cursor:pointer;
-      backdrop-filter:blur(10px);
+      padding:10px 24px; border-radius:50px; border:none; font-weight:600; font-size:0.85rem; display:inline-flex;
+      align-items:center; gap:8px; transition:var(--transition); min-height:44px; touch-action:manipulation;
+      background:var(--bg-card); color:var(--text); border:1px solid var(--border); cursor:pointer; backdrop-filter:blur(10px);
     }
     .btn:hover { transform:translateY(-2px); box-shadow:var(--shadow); }
-    .btn-primary {
-      background:linear-gradient(135deg,#f5b342,#d4880f);
-      color:#0a0e1a;
-      border:none;
-      font-weight:700;
-      box-shadow:0 4px 20px rgba(245,179,66,0.2);
-    }
+    .btn-primary { background:linear-gradient(135deg,#f5b342,#d4880f); color:#0a0e1a; border:none; font-weight:700; box-shadow:0 4px 20px rgba(245,179,66,0.2); }
     .btn-primary:hover { box-shadow:0 8px 40px rgba(245,179,66,0.3); transform:scale(1.02); }
     .btn-gold { background:rgba(245,179,66,0.12); color:var(--neon); border:1px solid rgba(245,179,66,0.15); }
     .btn-success { background:rgba(46,204,113,0.12); color:#2ecc71; border:1px solid rgba(46,204,113,0.15); }
@@ -399,27 +163,9 @@
     .btn-sm { padding:6px 16px; font-size:0.75rem; min-height:34px; }
     .btn-xs { padding:4px 12px; font-size:0.65rem; min-height:28px; }
 
-    .table-wrap {
-      background:var(--bg-card);
-      backdrop-filter:blur(20px);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      overflow:auto;
-      -webkit-overflow-scrolling:touch;
-      box-shadow:var(--shadow);
-    }
+    .table-wrap { background:var(--bg-card); backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:var(--radius); overflow:auto; -webkit-overflow-scrolling:touch; box-shadow:var(--shadow); }
     table { width:100%; border-collapse:collapse; font-size:0.85rem; min-width:600px; }
-    table th {
-      background:rgba(0,0,0,0.02);
-      text-align:left;
-      padding:14px 18px;
-      font-weight:700;
-      color:var(--text-muted);
-      border-bottom:1px solid var(--border);
-      font-size:0.65rem;
-      text-transform:uppercase;
-      letter-spacing:1px;
-    }
+    table th { background:rgba(0,0,0,0.02); text-align:left; padding:14px 18px; font-weight:700; color:var(--text-muted); border-bottom:1px solid var(--border); font-size:0.65rem; text-transform:uppercase; letter-spacing:1px; }
     table td { padding:12px 18px; border-bottom:1px solid var(--border); vertical-align:middle; color:var(--text); font-weight:500; }
     table tr:last-child td { border-bottom:none; }
     table tr:hover td { background:rgba(0,0,0,0.02); }
@@ -427,278 +173,110 @@
     .text-right { text-align:right; }
     .fw-600 { font-weight:600; }
 
-    .modal-overlay {
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,0.5);
-      backdrop-filter:blur(20px);
-      z-index:999;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding:16px;
-    }
+    .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.5); backdrop-filter:blur(20px); z-index:999; display:none; align-items:center; justify-content:center; padding:16px; }
     .modal-overlay.open { display:flex; }
-    .modal {
-      background:var(--modal-bg, var(--bg-card));
-      backdrop-filter:blur(30px);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      max-width:920px;
-      width:100%;
-      max-height:92vh;
-      overflow-y:auto;
-      padding:28px;
-      box-shadow:0 40px 80px rgba(0,0,0,0.3);
-      animation:modalIn 0.4s cubic-bezier(0.4,0,0.2,1);
-    }
+    .modal { background:var(--modal-bg, var(--bg-card)); backdrop-filter:blur(30px); border:1px solid var(--border); border-radius:var(--radius); max-width:920px; width:100%; max-height:92vh; overflow-y:auto; padding:28px; box-shadow:0 40px 80px rgba(0,0,0,0.3); animation:modalIn 0.4s cubic-bezier(0.4,0,0.2,1); }
     @keyframes modalIn { from { opacity:0; transform:scale(0.95) translateY(30px); } to { opacity:1; transform:scale(1) translateY(0); } }
-    .modal-header {
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:22px;
-    }
+    .modal-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:22px; }
     .modal-header h3 { font-size:1.4rem; font-weight:700; color:var(--text); }
-    .modal-close {
-      background:none;
-      border:none;
-      font-size:1.8rem;
-      color:var(--text-muted);
-      padding:0 8px;
-      min-height:44px;
-      min-width:44px;
-      transition:0.2s;
-      cursor:pointer;
-    }
-    .modal-close:hover { color:#e74c3c; transform:rotate(90deg); }
-    .modal-footer {
-      margin-top:24px;
-      display:flex;
-      justify-content:flex-end;
-      gap:12px;
-      border-top:1px solid var(--border);
-      padding-top:20px;
-      flex-wrap:wrap;
-    }
+    .modal-close { background:none; border:none; font-size:1.8rem; color:var(--text-muted); padding:0 8px; min-height:44px; min-width:44px; transition:0.2s; cursor:pointer; }
+    .modal-footer { margin-top:24px; display:flex; justify-content:flex-end; gap:12px; border-top:1px solid var(--border); padding-top:20px; flex-wrap:wrap; }
 
     .form-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:16px; }
     .form-group { display:flex; flex-direction:column; gap:4px; }
     .form-group label { font-size:0.75rem; font-weight:700; color:var(--text-muted); letter-spacing:0.5px; }
-    .form-group input, .form-group select, .form-group textarea {
-      background:var(--input-bg, var(--bg-card));
-      border:1px solid var(--input-border, var(--border));
-      border-radius:12px;
-      padding:12px 14px;
-      color:var(--text);
-      font-size:0.9rem;
-      width:100%;
-      min-height:44px;
-      transition:0.2s;
-      backdrop-filter:blur(10px);
-    }
-    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
-      outline:none;
-      border-color:var(--neon);
-      box-shadow:0 0 0 4px rgba(245,179,66,0.08);
-    }
-    .form-group input::placeholder, .form-group textarea::placeholder { color:var(--text-muted); }
+    .form-group input, .form-group select, .form-group textarea { background:var(--input-bg, var(--bg-card)); border:1px solid var(--input-border, var(--border)); border-radius:12px; padding:12px 14px; color:var(--text); font-size:0.9rem; width:100%; min-height:44px; transition:0.2s; backdrop-filter:blur(10px); }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline:none; border-color:var(--neon); box-shadow:0 0 0 4px rgba(245,179,66,0.08); }
     .form-group select { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236b7f9b' stroke-width='1.5' fill='none'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; }
-    .form-group select option { background:var(--bg-card); color:var(--text); }
     .form-group textarea { min-height:70px; resize:vertical; }
     .form-group input[readonly] { opacity:0.6; }
 
-    .voice-float {
-      position:fixed;
-      bottom:30px;
-      right:30px;
-      background:var(--bg-card);
-      backdrop-filter:blur(30px);
-      border:1px solid var(--border);
-      padding:14px 24px;
-      border-radius:60px;
-      color:var(--text);
-      font-size:0.9rem;
-      box-shadow:var(--shadow);
-      display:none;
-      align-items:center;
-      gap:14px;
-      z-index:200;
-      min-height:56px;
-    }
+    .voice-float { position:fixed; bottom:30px; right:30px; background:var(--bg-card); backdrop-filter:blur(30px); border:1px solid var(--border); padding:14px 24px; border-radius:60px; color:var(--text); font-size:0.9rem; box-shadow:var(--shadow); display:none; align-items:center; gap:14px; z-index:200; min-height:56px; }
     .voice-float.visible { display:flex; }
-    .voice-float .wave {
-      display:flex;
-      align-items:center;
-      gap:4px;
-      height:20px;
-    }
-    .voice-float .wave span {
-      display:inline-block;
-      width:4px;
-      height:100%;
-      background:var(--neon);
-      border-radius:4px;
-      animation:waveAnim 0.6s ease-in-out infinite alternate;
-    }
+    .voice-float .wave { display:flex; align-items:center; gap:4px; height:20px; }
+    .voice-float .wave span { display:inline-block; width:4px; height:100%; background:var(--neon); border-radius:4px; animation:waveAnim 0.6s ease-in-out infinite alternate; }
     .voice-float .wave span:nth-child(2) { animation-delay:0.1s; }
     .voice-float .wave span:nth-child(3) { animation-delay:0.2s; }
     .voice-float .wave span:nth-child(4) { animation-delay:0.3s; }
     .voice-float .wave span:nth-child(5) { animation-delay:0.4s; }
     @keyframes waveAnim { 0% { height:20%; } 100% { height:100%; } }
     .voice-float .text { font-weight:500; }
-    .voice-float .close-voice {
-      background:none;
-      border:none;
-      color:var(--text-muted);
-      font-size:1.2rem;
-      padding:0 4px;
-      min-height:36px;
-      cursor:pointer;
-    }
+    .voice-float .close-voice { background:none; border:none; color:var(--text-muted); font-size:1.2rem; padding:0 4px; min-height:36px; cursor:pointer; }
 
     /* ===== AI ROBOT CHAT ===== */
-    .ai-robot-btn {
-      position:fixed;
-      bottom:100px;
-      right:30px;
-      width:64px;
-      height:64px;
-      border-radius:50%;
-      background:linear-gradient(135deg,#f5b342,#d4880f);
-      border:none;
-      cursor:pointer;
-      box-shadow:0 8px 30px rgba(245,179,66,0.4);
-      z-index:250;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:1.8rem;
-      color:#0a0e1a;
-      transition:all 0.3s;
-      animation:robotPulse 2s ease-in-out infinite;
-    }
+    .ai-robot-btn { position:fixed; bottom:100px; right:30px; width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,#f5b342,#d4880f); border:none; cursor:pointer; box-shadow:0 8px 30px rgba(245,179,66,0.4); z-index:250; display:flex; align-items:center; justify-content:center; font-size:1.8rem; color:#0a0e1a; transition:all 0.3s; animation:robotPulse 2s ease-in-out infinite; }
     .ai-robot-btn:hover { transform:scale(1.1); box-shadow:0 12px 40px rgba(245,179,66,0.6); }
-    @keyframes robotPulse {
-      0%,100% { box-shadow:0 8px 30px rgba(245,179,66,0.4); }
-      50% { box-shadow:0 8px 50px rgba(245,179,66,0.7); }
-    }
-
-    .ai-robot-panel {
-      position:fixed;
-      bottom:180px;
-      right:30px;
-      width:380px;
-      max-width:calc(100vw - 60px);
-      max-height:500px;
-      background:var(--bg-card);
-      backdrop-filter:blur(30px);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      box-shadow:0 20px 60px rgba(0,0,0,0.3);
-      z-index:249;
-      display:none;
-      flex-direction:column;
-      overflow:hidden;
-    }
+    @keyframes robotPulse { 0%,100% { box-shadow:0 8px 30px rgba(245,179,66,0.4); } 50% { box-shadow:0 8px 50px rgba(245,179,66,0.7); } }
+    .ai-robot-panel { position:fixed; bottom:180px; right:30px; width:380px; max-width:calc(100vw - 60px); max-height:500px; background:var(--bg-card); backdrop-filter:blur(30px); border:1px solid var(--border); border-radius:var(--radius); box-shadow:0 20px 60px rgba(0,0,0,0.3); z-index:249; display:none; flex-direction:column; overflow:hidden; }
     .ai-robot-panel.visible { display:flex; }
-    .ai-robot-panel .robot-header {
-      padding:16px 20px;
-      background:linear-gradient(135deg,#f5b342,#d4880f);
-      color:#0a0e1a;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      font-weight:700;
-    }
-    .ai-robot-panel .robot-header .robot-title {
-      display:flex;
-      align-items:center;
-      gap:10px;
-    }
+    .ai-robot-panel .robot-header { padding:16px 20px; background:linear-gradient(135deg,#f5b342,#d4880f); color:#0a0e1a; display:flex; align-items:center; justify-content:space-between; font-weight:700; }
+    .ai-robot-panel .robot-header .robot-title { display:flex; align-items:center; gap:10px; }
     .ai-robot-panel .robot-header .robot-title i { font-size:1.2rem; }
-    .ai-robot-panel .robot-header .robot-close {
-      background:none;
-      border:none;
-      font-size:1.4rem;
-      cursor:pointer;
-      color:#0a0e1a;
-      min-height:32px;
-      min-width:32px;
-    }
-    .ai-robot-panel .robot-messages {
-      flex:1;
-      overflow-y:auto;
-      padding:16px 20px;
-      display:flex;
-      flex-direction:column;
-      gap:10px;
-    }
-    .ai-robot-panel .robot-msg {
-      padding:10px 14px;
-      border-radius:14px;
-      font-size:0.85rem;
-      line-height:1.4;
-      max-width:90%;
-    }
-    .ai-robot-panel .robot-msg.bot {
-      background:rgba(245,179,66,0.12);
-      color:var(--text);
-      align-self:flex-start;
-      border-bottom-left-radius:4px;
-    }
-    .ai-robot-panel .robot-msg.user {
-      background:rgba(1,167,157,0.15);
-      color:var(--text);
-      align-self:flex-end;
-      border-bottom-right-radius:4px;
-    }
-    .ai-robot-panel .robot-msg.typing {
-      font-style:italic;
-      opacity:0.7;
-    }
-    .ai-robot-panel .robot-input-area {
-      padding:12px 16px;
-      border-top:1px solid var(--border);
-      display:flex;
-      gap:8px;
-      background:rgba(0,0,0,0.02);
-    }
-    .ai-robot-panel .robot-input-area input {
-      flex:1;
-      padding:10px 14px;
-      border-radius:30px;
-      border:1px solid var(--border);
-      background:var(--bg-card);
-      color:var(--text);
-      font-size:0.85rem;
-      outline:none;
-    }
-    .ai-robot-panel .robot-input-area input:focus {
-      border-color:var(--neon);
-      box-shadow:0 0 0 3px rgba(245,179,66,0.1);
-    }
-    .ai-robot-panel .robot-input-area button {
-      width:44px;
-      height:44px;
-      border-radius:50%;
-      background:linear-gradient(135deg,#f5b342,#d4880f);
-      border:none;
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      font-size:1.1rem;
-      color:#0a0e1a;
-      transition:0.2s;
-      flex-shrink:0;
-    }
+    .ai-robot-panel .robot-header .robot-close { background:none; border:none; font-size:1.4rem; cursor:pointer; color:#0a0e1a; min-height:32px; min-width:32px; }
+    .ai-robot-panel .robot-messages { flex:1; overflow-y:auto; padding:16px 20px; display:flex; flex-direction:column; gap:10px; }
+    .ai-robot-panel .robot-msg { padding:10px 14px; border-radius:14px; font-size:0.85rem; line-height:1.4; max-width:90%; }
+    .ai-robot-panel .robot-msg.bot { background:rgba(245,179,66,0.12); color:var(--text); align-self:flex-start; border-bottom-left-radius:4px; }
+    .ai-robot-panel .robot-msg.user { background:rgba(1,167,157,0.15); color:var(--text); align-self:flex-end; border-bottom-right-radius:4px; }
+    .ai-robot-panel .robot-msg.typing { font-style:italic; opacity:0.7; }
+    .ai-robot-panel .robot-input-area { padding:12px 16px; border-top:1px solid var(--border); display:flex; gap:8px; background:rgba(0,0,0,0.02); }
+    .ai-robot-panel .robot-input-area input { flex:1; padding:10px 14px; border-radius:30px; border:1px solid var(--border); background:var(--bg-card); color:var(--text); font-size:0.85rem; outline:none; }
+    .ai-robot-panel .robot-input-area input:focus { border-color:var(--neon); box-shadow:0 0 0 3px rgba(245,179,66,0.1); }
+    .ai-robot-panel .robot-input-area button { width:44px; height:44px; border-radius:50%; background:linear-gradient(135deg,#f5b342,#d4880f); border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; font-size:1.1rem; color:#0a0e1a; transition:0.2s; flex-shrink:0; }
     .ai-robot-panel .robot-input-area button:hover { transform:scale(1.05); }
     .ai-robot-panel .robot-input-area button:disabled { opacity:0.4; cursor:not-allowed; }
 
-    @media screen and (max-width:820px) {
-      .doc-a4 { width:100%; min-height:auto; transform:scale(0.85); transform-origin:top center; }
-    }
+    /* ================================================================
+       A4 DOCUMENT – UPDATED LAYOUT
+    ================================================================ */
+    .doc-preview-wrapper { background:#e8e8e8; padding:20px; border-radius:var(--radius); box-shadow:0 20px 60px rgba(0,0,0,0.12); max-width:900px; margin:0 auto; }
+    .doc-a4 { width:210mm; min-height:297mm; margin:0 auto; background:#fff; color:#000; font-family:'Franklin Gothic Medium','Arial Narrow',Arial,sans-serif; font-size:11pt; line-height:1.3; padding:0; box-shadow:0 4px 20px rgba(0,0,0,0.08); position:relative; overflow:hidden; }
+    .doc-a4 .doc-header { height:9cm; background:#b62025; position:relative; overflow:hidden; padding:0; }
+    .doc-a4 .doc-header .watermark { position:absolute; top:0; left:0; width:100%; height:100%; display:flex; align-items:center; justify-content:center; pointer-events:none; opacity:0.06; overflow:hidden; }
+    .doc-a4 .doc-header .watermark img { width:100%; height:100%; object-fit:cover; object-position:center; }
+    .doc-a4 .doc-header .logo-container { position:absolute; right:8mm; top:75%; transform:translateY(-50%); max-width:60mm; max-height:45mm; z-index:2; }
+    .doc-a4 .doc-header .logo-container img { width:100%; height:auto; max-height:45mm; object-fit:contain; }
+    .doc-a4 .doc-title-header { background:linear-gradient(135deg, #a92927, #de3526); padding:4mm 6mm; position:relative; }
+    .doc-a4 .doc-title-header .title-table { width:178.389mm; height:19.649mm; border-radius:5mm; overflow:hidden; border-collapse:collapse; margin:0 auto; box-shadow:0 0 0 1px rgba(255,255,255,0.1); }
+    .doc-a4 .doc-title-header .title-table .title-cell { width:75%; background:linear-gradient(135deg, #a92927, #de3526); color:#fff; font-size:28pt; font-weight:800; letter-spacing:3px; text-align:center; vertical-align:middle; padding:0 6mm; font-family:'Franklin Gothic Heavy','Franklin Gothic Medium','Arial Black',sans-serif; text-transform:uppercase; }
+    .doc-a4 .doc-title-header .title-table .date-cell { width:25%; background:#fff; text-align:center; vertical-align:middle; padding:1mm 2mm; font-size:9pt; font-weight:600; color:#333; }
+    .doc-a4 .doc-title-header .title-table .date-cell .label { font-size:7pt; color:#a92927; letter-spacing:1px; font-weight:700; }
+    .doc-a4 .doc-title-header .title-table .date-cell .value { font-size:9pt; font-weight:700; color:#222; }
+    .doc-a4 .doc-title-header .title-table .date-divider { height:1px; background:#a92927; width:80%; margin:1mm auto; }
+    .doc-a4 .doc-client-area { background:rgba(255,165,0,0.08); padding:3mm 6mm; }
+    .doc-a4 .doc-client-area .client-table { width:100%; border-collapse:collapse; font-size:9.5pt; color:#222; }
+    .doc-a4 .doc-client-area .client-table td { padding:1.5mm 2mm; vertical-align:middle; border:none; }
+    .doc-a4 .doc-client-area .client-table .lbl { font-weight:600; color:#333; min-width:70px; }
+    .doc-a4 .doc-client-area .client-table .val { font-weight:500; color:#111; }
+    .doc-a4 .doc-client-area .client-table .ref-no { font-weight:700; color:#a92927; }
+    .doc-a4 .doc-items-header { padding:0 6mm; margin-top:2mm; }
+    .doc-a4 .doc-items-header .items-header-box { background:linear-gradient(135deg, #a92927, #de3526); border-radius:5mm; height:10mm; width:190mm; display:flex; align-items:center; justify-content:space-around; padding:0 4mm; color:#fff; font-weight:700; font-size:10pt; letter-spacing:0.5px; margin:0 auto; }
+    .doc-a4 .doc-items-header .items-header-box span { text-align:center; flex:1; }
+    .doc-a4 .doc-items-header .items-header-box span:nth-child(1) { flex:3; }
+    .doc-a4 .doc-items-header .items-header-box span:nth-child(2) { flex:1; }
+    .doc-a4 .doc-items-header .items-header-box span:nth-child(3) { flex:1.5; }
+    .doc-a4 .doc-items-header .items-header-box span:nth-child(4) { flex:1.5; }
+    .doc-a4 .doc-items-body { padding:0 6mm; margin-top:1mm; }
+    .doc-a4 .doc-items-body .items-body-box { background:rgba(255,165,0,0.05); border-radius:0; width:189mm; min-height:84mm; margin:0 auto; padding:3mm 4mm; position:relative; }
+    .doc-a4 .doc-items-body .items-body-box table { width:100%; border-collapse:collapse; font-size:9.5pt; }
+    .doc-a4 .doc-items-body .items-body-box table td { padding:2mm 2mm; border-bottom:0.5px solid rgba(0,0,0,0.04); vertical-align:middle; color:#222; }
+    .doc-a4 .doc-totals { padding:2mm 6mm; text-align:right; font-size:9.5pt; }
+    .doc-a4 .doc-totals .row { display:flex; justify-content:flex-end; gap:20px; padding:0.5mm 0; }
+    .doc-a4 .doc-totals .row .lbl { font-weight:500; color:#555; }
+    .doc-a4 .doc-totals .row .amt { font-weight:700; min-width:80px; text-align:right; color:#222; }
+    .doc-a4 .doc-totals .grand { font-size:12pt; font-weight:800; border-top:2px solid #a92927; padding-top:2mm; margin-top:1mm; }
+    .doc-a4 .doc-totals .grand .amt { color:#a92927; }
+    .doc-a4 .doc-amount-words { padding:2mm 6mm; font-size:10pt; font-weight:500; color:#222; }
+    .doc-a4 .doc-amount-words .words-label { font-weight:600; color:#333; }
+    .doc-a4 .doc-amount-words .words-value { border-bottom:1.5px dotted #888; padding-bottom:1mm; display:inline-block; min-width:60%; }
+    .doc-a4 .doc-footer { padding:2mm 6mm 3mm 6mm; border-top:1px solid #ddd; margin-top:3mm; display:flex; justify-content:center; align-items:center; flex-wrap:wrap; gap:6px 16px; font-size:9.5pt; color:#333; font-weight:500; }
+    .doc-a4 .doc-footer .contact-item { display:inline-flex; align-items:center; gap:4px; }
+    .doc-a4 .doc-footer .contact-item i { color:#a92927; font-size:9pt; }
+    .doc-a4 .doc-stamp-area { display:flex; justify-content:flex-end; padding:2mm 6mm 4mm 6mm; position:relative; }
+    .doc-a4 .doc-stamp-area .stamp-wrapper { width:45mm; height:45mm; border-radius:50%; overflow:hidden; display:flex; align-items:center; justify-content:center; position:relative; background:#f8f8f8; box-shadow:0 1px 6px rgba(0,0,0,0.06); }
+    .doc-a4 .doc-stamp-area .stamp-wrapper img { width:100%; height:100%; object-fit:contain; border-radius:50%; }
+    .doc-a4 .doc-stamp-area .stamp-wrapper .stamp-date { position:absolute; top:50%; left:50%; transform:translate(-50%, -50%); font-family:'Courier New',Courier,monospace; font-size:11pt; font-weight:700; color:#e74c3c; text-align:center; background:rgba(255,255,255,0.85); padding:2mm 3mm; border-radius:4px; line-height:1.2; pointer-events:none; white-space:nowrap; }
+
+    @media screen and (max-width:820px) { .doc-a4 { width:100%; min-height:auto; transform:scale(0.85); transform-origin:top center; } }
     @media print {
       body * { visibility:hidden; }
       .doc-a4, .doc-a4 * { visibility:visible; }
@@ -716,118 +294,48 @@
       .form-grid { grid-template-columns:1fr; }
       .topbar h2 { font-size:1.2rem; }
       .modal { padding:18px; border-radius:24px; }
-      .modal-header h3 { font-size:1.1rem; }
       .doc-a4 { transform:scale(0.6); transform-origin:top center; }
     }
     @media (max-width:480px) {
       .stats-grid { grid-template-columns:1fr; }
       .topbar-actions .voice-btn span { display:none; }
       .btn { padding:8px 14px; font-size:0.8rem; }
-      .stat-card .value { font-size:1.2rem; }
     }
 
-    .tag {
-      display:inline-block;
-      padding:3px 14px;
-      border-radius:30px;
-      font-size:0.65rem;
-      font-weight:700;
-    }
+    .tag { display:inline-block; padding:3px 14px; border-radius:30px; font-size:0.65rem; font-weight:700; }
     .tag-paid { background:rgba(46,204,113,0.15); color:#2ecc71; }
     .tag-pending { background:rgba(245,179,66,0.12); color:var(--neon); }
     .tag-overdue { background:rgba(231,76,60,0.12); color:#e74c3c; }
 
-    .logo-upload-area {
-      display:flex;
-      align-items:center;
-      gap:14px;
-      padding:8px 14px;
-      border:1px dashed var(--border);
-      border-radius:12px;
-      cursor:pointer;
-      transition:0.2s;
-    }
+    .logo-upload-area { display:flex; align-items:center; gap:14px; padding:8px 14px; border:1px dashed var(--border); border-radius:12px; cursor:pointer; transition:0.2s; }
     .logo-upload-area:hover { border-color:var(--neon); background:rgba(245,179,66,0.03); }
     .logo-upload-area input { display:none; }
 
-    .sylvia-console {
-      position:fixed;
-      bottom:100px;
-      right:30px;
-      width:340px;
-      max-width:calc(100vw - 60px);
-      background:var(--bg-card);
-      backdrop-filter:blur(30px);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:16px 20px;
-      box-shadow:var(--shadow);
-      z-index:150;
-      display:none;
-      max-height:400px;
-      overflow-y:auto;
-    }
+    .sylvia-console { position:fixed; bottom:100px; right:30px; width:340px; max-width:calc(100vw - 60px); background:var(--bg-card); backdrop-filter:blur(30px); border:1px solid var(--border); border-radius:var(--radius); padding:16px 20px; box-shadow:var(--shadow); z-index:150; display:none; max-height:400px; overflow-y:auto; }
     .sylvia-console.visible { display:block; }
     .sylvia-console .msg { padding:8px 0; border-bottom:1px solid var(--border); font-size:0.85rem; color:var(--text); }
     .sylvia-console .msg .who { font-weight:700; color:var(--neon); }
     .sylvia-console .msg .who.me { color:var(--text-muted); }
-    .sylvia-console .msg:last-child { border-bottom:none; }
 
-    .training-badge {
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      background:rgba(245,179,66,0.08);
-      border:1px solid rgba(245,179,66,0.1);
-      border-radius:30px;
-      padding:4px 14px;
-      font-size:0.65rem;
-      color:var(--neon);
-      font-weight:600;
-    }
+    .training-badge { display:inline-flex; align-items:center; gap:6px; background:rgba(245,179,66,0.08); border:1px solid rgba(245,179,66,0.1); border-radius:30px; padding:4px 14px; font-size:0.65rem; color:var(--neon); font-weight:600; }
 
-    .training-card {
-      background:var(--bg-card);
-      backdrop-filter:blur(20px);
-      border:1px solid var(--border);
-      border-radius:var(--radius);
-      padding:18px 20px;
-      margin-bottom:16px;
-      transition:var(--transition);
-      box-shadow:var(--shadow);
-    }
+    .training-card { background:var(--bg-card); backdrop-filter:blur(20px); border:1px solid var(--border); border-radius:var(--radius); padding:18px 20px; margin-bottom:16px; transition:var(--transition); box-shadow:var(--shadow); }
     .training-card:hover { border-color:var(--neon); }
-    .training-card .fields-grid {
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:12px;
-    }
+    .training-card .fields-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
     .training-card .fields-grid .full-width { grid-column:1/-1; }
-    .training-card .fields-grid label {
-      font-size:0.7rem;
-      font-weight:700;
-      color:var(--text-muted);
-      letter-spacing:0.5px;
-    }
-    .training-card .fields-grid input, .training-card .fields-grid textarea {
-      background:var(--input-bg, var(--bg-card));
-      border:1px solid var(--input-border, var(--border));
-      border-radius:10px;
-      padding:10px 12px;
-      color:var(--text);
-      font-size:0.85rem;
-      width:100%;
-      min-height:40px;
-      transition:0.2s;
-    }
-    .training-card .fields-grid input:focus, .training-card .fields-grid textarea:focus {
-      outline:none;
-      border-color:var(--neon);
-      box-shadow:0 0 0 4px rgba(245,179,66,0.06);
-    }
+    .training-card .fields-grid label { font-size:0.7rem; font-weight:700; color:var(--text-muted); letter-spacing:0.5px; }
+    .training-card .fields-grid input, .training-card .fields-grid textarea { background:var(--input-bg, var(--bg-card)); border:1px solid var(--input-border, var(--border)); border-radius:10px; padding:10px 12px; color:var(--text); font-size:0.85rem; width:100%; min-height:40px; transition:0.2s; }
+    .training-card .fields-grid input:focus, .training-card .fields-grid textarea:focus { outline:none; border-color:var(--neon); box-shadow:0 0 0 4px rgba(245,179,66,0.06); }
     .training-card .fields-grid textarea { min-height:50px; resize:vertical; }
     .training-card .card-actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
     .training-card .card-actions .btn { min-height:36px; padding:6px 18px; font-size:0.75rem; }
+
+    /* PDF Preview Overlay */
+    #pdfPreviewOverlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
+    }
+    #pdfPreviewOverlay.visible { display: flex; }
+    #pdfPreviewImage { max-width: 100%; max-height: 80vh; box-shadow: 0 10px 40px rgba(0,0,0,0.5); border-radius: 8px; margin-bottom: 20px; }
   </style>
 </head>
 <body>
@@ -846,7 +354,7 @@
       <div class="logo-wrap" id="logoDisplay"><span>IM</span></div>
       <div>
         <h1>Sylvia<span>.</span></h1>
-        <small>ISLE MEDIA · v8.0</small>
+        <small>ISLE MEDIA · v9.0</small>
       </div>
     </div>
 
@@ -859,19 +367,23 @@
       <div class="nav-label">Main</div>
       <a href="#" class="active" data-page="dashboard"><i class="fas fa-chart-pie"></i> Dashboard</a>
       <a href="#" data-page="clients"><i class="fas fa-users"></i> Clients</a>
-      <div class="nav-label">Documents</div>
-      <a href="#" data-page="proforma"><i class="fas fa-file-invoice"></i> Proforma</a>
+      
+      <div class="nav-label">Catalog & Documents</div>
+      <a href="#" data-page="items"><i class="fas fa-box-open"></i> Item Catalog</a>
+      <a href="#" data-page="proforma"><i class="fas fa-file-invoice"></i> Proforma (Parent)</a>
       <a href="#" data-page="invoice"><i class="fas fa-file-invoice-dollar"></i> Invoices</a>
       <a href="#" data-page="receipt"><i class="fas fa-receipt"></i> Receipts</a>
+      
       <div class="nav-label">Finance</div>
       <a href="#" data-page="expenditure"><i class="fas fa-coins"></i> Expenditure</a>
       <a href="#" data-page="reports"><i class="fas fa-chart-bar"></i> Reports</a>
+      
       <div class="nav-label">Sylvia</div>
       <a href="#" data-page="training"><i class="fas fa-brain"></i> Voice Training</a>
       <a href="#" data-page="settings"><i class="fas fa-cog"></i> Settings</a>
     </nav>
     <div class="sidebar-footer">
-      <span class="training-badge"><i class="fas fa-microchip"></i> Sylvia AI · v8.0</span>
+      <span class="training-badge"><i class="fas fa-microchip"></i> Sylvia AI · v9.0</span>
     </div>
   </aside>
 
@@ -920,22 +432,95 @@
 
     <section class="page" id="page-clients"><div class="page-header"><h3><i class="fas fa-users"></i> Clients</h3><div class="actions"><button class="btn btn-primary" onclick="openClientModal()"><i class="fas fa-plus"></i> Add Client</button></div></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Tel</th><th>Email</th><th>City</th><th style="text-align:right;">Actions</th></tr></thead><tbody id="clientTableBody"></tbody></table></div></section>
 
-    <section class="page" id="page-proforma"><div class="page-header"><h3><i class="fas fa-file-invoice"></i> Proforma Invoices</h3><div class="actions"><button class="btn btn-primary" onclick="openProformaModal()"><i class="fas fa-plus"></i> New Proforma</button></div></div><div class="table-wrap"><table><thead><tr><th>#</th><th>Client</th><th>Date</th><th>Total</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead><tbody id="proformaTableBody"></tbody></table></div></section>
+    <!-- ===== ITEM CATALOG ===== -->
+    <section class="page" id="page-items">
+      <div class="page-header">
+        <h3><i class="fas fa-box-open"></i> Item Catalog</h3>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="openItemModal()"><i class="fas fa-plus"></i> Add Item</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Item Name</th><th>Price</th><th>Tax</th><th style="text-align:right;">Actions</th></tr></thead>
+          <tbody id="itemTableBody"></tbody>
+        </table>
+      </div>
+    </section>
 
-    <section class="page" id="page-invoice"><div class="page-header"><h3><i class="fas fa-file-invoice-dollar"></i> Invoices</h3><div class="actions"><button class="btn btn-primary" onclick="openInvoiceModal()"><i class="fas fa-plus"></i> New Invoice</button></div></div><div class="table-wrap"><table><thead><tr><th>#</th><th>Client</th><th>Date</th><th>Total</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead><tbody id="invoiceTableBody"></tbody></table></div></section>
+    <!-- ===== PROFORMA ===== -->
+    <section class="page" id="page-proforma">
+      <div class="page-header">
+        <h3><i class="fas fa-file-invoice"></i> Proforma Invoices (Parent)</h3>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="openProformaModal()"><i class="fas fa-plus"></i> New Proforma</button>
+        </div>
+      </div>
+      
+      <!-- Status Categorization Tabs -->
+      <div style="display:flex;gap:10px;margin-bottom:20px;">
+        <button class="btn btn-outline btn-sm active-tab" onclick="filterProforma('pending')">Pending</button>
+        <button class="btn btn-outline btn-sm" onclick="filterProforma('paid')">Paid</button>
+        <button class="btn btn-outline btn-sm" onclick="filterProforma('cancelled')">Cancelled</button>
+        <button class="btn btn-outline btn-sm" onclick="filterProforma('all')">All</button>
+      </div>
 
-    <section class="page" id="page-receipt"><div class="page-header"><h3><i class="fas fa-receipt"></i> Receipts</h3><div class="actions"><button class="btn btn-primary" onclick="openReceiptModal()"><i class="fas fa-plus"></i> New Receipt</button></div></div><div class="table-wrap"><table><thead><tr><th>#</th><th>Client</th><th>Date</th><th>Amount</th><th>Method</th><th style="text-align:right;">Actions</th></tr></thead><tbody id="receiptTableBody"></tbody></table></div></section>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Client</th><th>Date</th><th>Total</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead>
+          <tbody id="proformaTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== INVOICE ===== -->
+    <section class="page" id="page-invoice">
+      <div class="page-header">
+        <h3><i class="fas fa-file-invoice-dollar"></i> Invoices (Child)</h3>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="openInvoiceModal()"><i class="fas fa-plus"></i> New Direct Invoice</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Client</th><th>Date</th><th>Total</th><th>Status</th><th style="text-align:right;">Actions</th></tr></thead>
+          <tbody id="invoiceTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ===== RECEIPT ===== -->
+    <section class="page" id="page-receipt">
+      <div class="page-header">
+        <h3><i class="fas fa-receipt"></i> Receipts (Child)</h3>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="openReceiptModal()"><i class="fas fa-plus"></i> New Direct Receipt</button>
+        </div>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>#</th><th>Client</th><th>Date</th><th>Amount</th><th>Method</th><th style="text-align:right;">Actions</th></tr></thead>
+          <tbody id="receiptTableBody"></tbody>
+        </table>
+      </div>
+    </section>
 
     <section class="page" id="page-expenditure"><div class="page-header"><h3><i class="fas fa-coins"></i> Expenditure</h3><div class="actions"><button class="btn btn-primary" onclick="openExpenseModal()"><i class="fas fa-plus"></i> Add Expense</button></div></div><div class="table-wrap"><table><thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Vendor</th><th style="text-align:right;">Amount</th><th style="text-align:right;">Actions</th></tr></thead><tbody id="expenseTableBody"></tbody></table></div></section>
 
-    <section class="page" id="page-reports"><div class="page-header"><h3><i class="fas fa-chart-bar"></i> Reports</h3></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
-      <div class="stat-card"><div class="label">Total Revenue</div><div class="value" id="rptRevenue">0 <small>UGX</small></div></div>
-      <div class="stat-card"><div class="label">Total Expenditure</div><div class="value" id="rptExpense">0 <small>UGX</small></div></div>
-      <div class="stat-card"><div class="label">Net Profit</div><div class="value neon-glow" id="rptNetProfit">0 <small>UGX</small></div></div>
-      <div class="stat-card" style="border-color:rgba(245,179,66,0.15);"><div class="label">Tithe (10%)</div><div class="value" id="rptTithe">0 <small>UGX</small></div></div>
-      <div class="stat-card" style="border-color:rgba(245,179,66,0.15);"><div class="label">Offering (10%)</div><div class="value" id="rptOffering">0 <small>UGX</small></div></div>
-      <div class="stat-card" style="border-color:rgba(46,204,113,0.15);"><div class="label">Final Net</div><div class="value" id="rptFinalNet">0 <small>UGX</small></div></div>
-    </div><div class="table-wrap"><h4 style="padding:16px 18px 0 18px;font-size:0.85rem;color:var(--text-muted);font-weight:700;">All Transactions</h4><div style="padding:12px 18px 18px 18px;font-size:0.8rem;color:var(--text-muted);" id="rptTransactions">No transactions yet.</div></div></section>
+    <section class="page" id="page-reports">
+      <div class="page-header">
+        <h3><i class="fas fa-chart-bar"></i> Reports - <span id="reportCompanyName">ISLE MEDIA</span></h3>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:24px;">
+        <div class="stat-card"><div class="label">Total Revenue</div><div class="value" id="rptRevenue">0 <small>UGX</small></div></div>
+        <div class="stat-card"><div class="label">Total Expenditure</div><div class="value" id="rptExpense">0 <small>UGX</small></div></div>
+        <div class="stat-card"><div class="label">Net Profit</div><div class="value neon-glow" id="rptNetProfit">0 <small>UGX</small></div></div>
+        <div class="stat-card" style="border-color:rgba(245,179,66,0.15);"><div class="label">Tithe (10%)</div><div class="value" id="rptTithe">0 <small>UGX</small></div></div>
+        <div class="stat-card" style="border-color:rgba(245,179,66,0.15);"><div class="label">Offering (10%)</div><div class="value" id="rptOffering">0 <small>UGX</small></div></div>
+        <div class="stat-card" style="border-color:rgba(46,204,113,0.15);"><div class="label">Final Net</div><div class="value" id="rptFinalNet">0 <small>UGX</small></div></div>
+      </div>
+      <div class="table-wrap"><h4 style="padding:16px 18px 0 18px;font-size:0.85rem;color:var(--text-muted);font-weight:700;">All Transactions</h4><div style="padding:12px 18px 18px 18px;font-size:0.8rem;color:var(--text-muted);" id="rptTransactions">No transactions yet.</div></div>
+    </section>
 
     <section class="page" id="page-training">
       <div class="page-header">
@@ -950,16 +535,27 @@
         <h4 style="padding:16px 18px 0 18px;font-size:0.85rem;color:var(--text-muted);font-weight:700;">How Conversation Training Works</h4>
         <div style="padding:12px 18px 18px 18px;font-size:0.8rem;color:var(--text-muted);font-weight:500;">
           <p><span style="color:var(--neon);font-weight:700;">1. Phrase you'll say</span> – What you speak to trigger Sylvia.</p>
-          <p><span style="color:var(--neon);font-weight:700;">2. Sylvia's voice response</span> – What Sylvia speaks back to you (in her voice).</p>
-          <p><span style="color:var(--neon);font-weight:700;">3. Action / Response</span> – What Sylvia should <strong>do</strong> (open field – e.g., "create proforma", "send email", "calculate 10% of 5000", or any custom instruction).</p>
-          <p><span style="color:var(--neon);font-weight:700;">4. Sylvia's response about the action</span> – What Sylvia says <strong>after</strong> completing the action.</p>
-          <p style="margin-top:8px;font-style:italic;">💡 All fields are open – you can type any command, instruction, or response. Sylvia will remember and execute the full conversation flow.</p>
+          <p><span style="color:var(--neon);font-weight:700;">2. Sylvia's voice response</span> – What Sylvia speaks back to you.</p>
+          <p><span style="color:var(--neon);font-weight:700;">3. Action / Response</span> – What Sylvia should <strong>do</strong>.</p>
+          <p><span style="color:var(--neon);font-weight:700;">4. Sylvia's response about the action</span> – What Sylvia says <strong>after</strong>.</p>
         </div>
       </div>
     </section>
 
     <section class="page" id="page-settings">
       <div class="page-header"><h3><i class="fas fa-cog"></i> Settings</h3></div>
+      
+      <div class="stat-card" style="min-height:auto; margin-bottom: 20px;">
+        <div class="label">Select Sylvia's Voice</div>
+        <div style="margin-top:12px; display:flex; gap: 12px; align-items: center;">
+          <select id="voiceSelect" style="flex:1; padding:12px; border-radius:12px; border:1px solid var(--border); background:var(--bg-card); color:var(--text);">
+            <option value="">Loading voices...</option>
+          </select>
+          <button class="btn btn-primary" onclick="testVoice()"><i class="fas fa-play"></i> Test Voice</button>
+        </div>
+        <p style="font-size:0.7rem;color:var(--text-muted);margin-top:10px;">Select from available female voices (Samantha, Zira, etc.)</p>
+      </div>
+
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
         <div class="stat-card" style="min-height:auto;">
           <div class="label">Company Logos</div>
@@ -1006,7 +602,6 @@
             <div class="form-group" style="flex:1;"><input id="wakeWord" value="Sylvia" placeholder="Sylvia" /></div>
             <button class="btn btn-primary" onclick="saveWakeWord()"><i class="fas fa-save"></i> Save</button>
           </div>
-          <p style="font-size:0.7rem;color:var(--text-muted);margin-top:10px;font-weight:500;">Say the wake word to activate Sylvia.</p>
         </div>
       </div>
     </section>
@@ -1034,15 +629,24 @@
 
   <div class="ai-robot-panel" id="aiRobotPanel">
     <div class="robot-header">
-      <div class="robot-title"><i class="fas fa-robot"></i> Sylvia AI · Learning Robot</div>
+      <div class="robot-title"><i class="fas fa-robot"></i> Sylvia AI · Financial Advisor</div>
       <button class="robot-close" onclick="toggleAIRobot()">&times;</button>
     </div>
     <div class="robot-messages" id="robotMessages">
-      <div class="robot-msg bot">Hello Mr. Njuguna! I'm Sylvia, your AI assistant. I can search the web for answers, learn from our conversations, and even modify the app when you ask. What would you like to know or do?</div>
+      <div class="robot-msg bot">Hello Mr. Njuguna! I am fully connected to your business data. I can analyze your reports, search the web, and modify the app. Try asking me: "What are my total pending proformas?" or "Create a client named Acme Corp".</div>
     </div>
     <div class="robot-input-area">
-      <input type="text" id="robotInput" placeholder="Ask me anything or say 'create a client named...'" onkeydown="if(event.key==='Enter')sendRobotMessage()" />
+      <input type="text" id="robotInput" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter')sendRobotMessage()" />
       <button id="robotSendBtn" onclick="sendRobotMessage()"><i class="fas fa-paper-plane"></i></button>
+    </div>
+  </div>
+
+  <!-- ===== PDF PREVIEW OVERLAY ===== -->
+  <div id="pdfPreviewOverlay">
+    <img id="pdfPreviewImage" src="" alt="PDF Preview" />
+    <div style="display:flex; gap:16px;">
+      <button class="btn btn-outline" style="background:#fff;color:#000;" onclick="closePdfPreview()"><i class="fas fa-times"></i> Cancel</button>
+      <button class="btn btn-primary" id="downloadPdfBtn"><i class="fas fa-download"></i> Download PDF</button>
     </div>
   </div>
 
@@ -1065,6 +669,8 @@
       set(company, key, val) { localStorage.setItem('sylvia_' + company + '_' + key, JSON.stringify(val)); },
       clients(company) { return this.get(company, 'clients', []); },
       setClients(company, c) { this.set(company, 'clients', c); },
+      items(company) { return this.get(company, 'items', []); },
+      setItems(company, i) { this.set(company, 'items', i); },
       proformas(company) { return this.get(company, 'proformas', []); },
       setProformas(company, p) { this.set(company, 'proformas', p); },
       invoices(company) { return this.get(company, 'invoices', []); },
@@ -1076,12 +682,10 @@
       counter(company, type) { return this.get(company, 'counter_' + type, 8000); },
       setCounter(company, type, val) { this.set(company, 'counter_' + type, val); },
       nextCounter(company, type) { const c = this.counter(company, type) + 1; this.setCounter(company, type, c); return c; },
-      training() { return this.get('global', 'training_v8', []); },
-      setTraining(t) { this.set('global', 'training_v8', t); },
+      training() { return this.get('global', 'training_v9', []); },
+      setTraining(t) { this.set('global', 'training_v9', t); },
       memory() { return this.get('global', 'memory', []); },
       setMemory(m) { this.set('global', 'memory', m); },
-      knowledge() { return this.get('global', 'knowledge', []); },
-      setKnowledge(k) { this.set('global', 'knowledge', k); },
       logo(company) { return this.get(company, 'logo', ''); },
       setLogo(company, data) { this.set(company, 'logo', data); },
       watermark(company) { return this.get(company, 'watermark', ''); },
@@ -1096,6 +700,8 @@
       setTheme(t) { this.set('global', 'theme', t); },
       currentCompany() { return this.get('global', 'currentCompany', 'islemedia'); },
       setCurrentCompany(c) { this.set('global', 'currentCompany', c); },
+      voiceName() { return this.get('global', 'voiceName', ''); },
+      setVoiceName(v) { this.set('global', 'voiceName', v); },
     };
 
     // ================================================================
@@ -1137,6 +743,7 @@
     }
 
     let currentCompany = DB.currentCompany();
+    let currentProformaFilter = 'pending';
 
     // ================================================================
     //  COMPANY SWITCHER, THEME, NAVIGATION
@@ -1176,7 +783,7 @@
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
         const el = document.getElementById('page-' + page);
         if (el) el.classList.add('active');
-        const titles = { dashboard:'Dashboard', clients:'Clients', proforma:'Proforma Invoices', invoice:'Invoices', receipt:'Receipts', expenditure:'Expenditure', reports:'Reports', training:'Voice Training', settings:'Settings' };
+        const titles = { dashboard:'Dashboard', clients:'Clients', items:'Item Catalog', proforma:'Proforma Invoices', invoice:'Invoices', receipt:'Receipts', expenditure:'Expenditure', reports:'Reports', training:'Voice Training', settings:'Settings' };
         document.getElementById('pageTitle').innerHTML = titles[page] + ' <small>' + (page==='dashboard'?'overview':'') + '</small>';
         if (page === 'dashboard') refreshDashboard();
         if (page === 'reports') refreshReports();
@@ -1202,15 +809,12 @@
       if (e.target === this) closeModal();
     });
 
-    // ===== LOGO & WATERMARK & STAMP UPLOAD =====
+    // ===== ASSET UPLOADS =====
     function handleLogoUpload(company, e) {
-      const file = e.target.files[0];
-      if (!file) return;
+      const file = e.target.files[0]; if (!file) return;
       const reader = new FileReader();
       reader.onload = function(ev) {
-        const data = ev.target.result;
-        DB.setLogo(company, data);
-        applyLogo(company, data);
+        const data = ev.target.result; DB.setLogo(company, data); applyLogo(company, data);
         addSylviaMessage('Logo uploaded for ' + company);
         if (company === currentCompany) { document.getElementById('logoDisplay').innerHTML = `<img src="${data}" />`; }
       };
@@ -1226,13 +830,10 @@
     }
 
     function handleWatermarkUpload(company, e) {
-      const file = e.target.files[0];
-      if (!file) return;
+      const file = e.target.files[0]; if (!file) return;
       const reader = new FileReader();
       reader.onload = function(ev) {
-        const data = ev.target.result;
-        DB.setWatermark(company, data);
-        applyWatermark(company, data);
+        const data = ev.target.result; DB.setWatermark(company, data); applyWatermark(company, data);
         addSylviaMessage('Watermark uploaded for ' + company);
       };
       reader.readAsDataURL(file);
@@ -1246,13 +847,10 @@
     }
 
     function handleStampUpload(company, e) {
-      const file = e.target.files[0];
-      if (!file) return;
+      const file = e.target.files[0]; if (!file) return;
       const reader = new FileReader();
       reader.onload = function(ev) {
-        const data = ev.target.result;
-        DB.setStamp(company, data);
-        applyStamp(company, data);
+        const data = ev.target.result; DB.setStamp(company, data); applyStamp(company, data);
         addSylviaMessage('Stamp uploaded for ' + company);
       };
       reader.readAsDataURL(file);
@@ -1282,28 +880,58 @@
     }
     document.getElementById('wakeWord').value = DB.wakeWord();
 
-    function toggleSylviaConsole() {
-      const el = document.getElementById('sylviaConsole');
-      el.classList.toggle('visible');
-      if (el.classList.contains('visible')) { document.getElementById('sylviaChatLog').scrollTop = document.getElementById('sylviaChatLog').scrollHeight; }
+    // ===== SPEECH SYNTHESIS =====
+    let voicesLoaded = false;
+    let femaleVoices = [];
+
+    function populateVoices() {
+      const voices = speechSynthesis.getVoices();
+      if (voices.length === 0) return;
+      
+      // Filter for female English voices (heuristic based on common names)
+      const femaleNames = ['Zira', 'Samantha', 'Karen', 'Tessa', 'Victoria', 'Susan', 'Hazel', 'Female'];
+      femaleVoices = voices.filter(v => v.lang.startsWith('en') && femaleNames.some(name => v.name.includes(name)));
+      
+      // If less than 5, just grab any English voices to fill up
+      if (femaleVoices.length < 5) {
+        const otherEn = voices.filter(v => v.lang.startsWith('en') && !femaleVoices.includes(v));
+        femaleVoices = femaleVoices.concat(otherEn).slice(0, 5);
+      }
+
+      const select = document.getElementById('voiceSelect');
+      if (select) {
+        select.innerHTML = femaleVoices.map((v, i) => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('');
+        const savedVoice = DB.voiceName();
+        if (savedVoice) select.value = savedVoice;
+      }
+      voicesLoaded = true;
     }
-    function addSylviaMessage(text, isMe) {
-      const log = document.getElementById('sylviaChatLog');
-      const div = document.createElement('div');
-      div.className = 'msg';
-      div.innerHTML = `<span class="who ${isMe?'me':''}">${isMe?'You':'Sylvia'}</span> ${text}`;
-      log.appendChild(div);
-      log.scrollTop = log.scrollHeight;
-      while (log.children.length > 50) log.removeChild(log.firstChild);
+
+    speechSynthesis.onvoiceschanged = populateVoices;
+    setTimeout(populateVoices, 1000); // Fallback
+
+    function testVoice() {
+      const select = document.getElementById('voiceSelect');
+      const name = select.value;
+      DB.setVoiceName(name);
+      speakText("Hello Mr. Njuguna. This is how I sound. I am ready to manage your finances.");
     }
 
     function speakText(text, callback) {
       if (!window.speechSynthesis) { if(callback) callback(); return; }
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US'; utterance.rate = 0.9; utterance.pitch = 0.8;
+      utterance.lang = 'en-US'; utterance.rate = 0.95; utterance.pitch = 1.0; // Slightly higher pitch for female
+      
+      const savedVoiceName = DB.voiceName();
       const voices = speechSynthesis.getVoices();
-      const africanVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Zira') || v.name.includes('Samantha')));
-      if (africanVoice) utterance.voice = africanVoice;
+      let selectedVoice = voices.find(v => v.name === savedVoiceName);
+      
+      if (!selectedVoice) {
+        // Fallback to default African/Female voice if none selected
+        selectedVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Zira') || v.name.includes('Samantha')));
+      }
+      
+      if (selectedVoice) utterance.voice = selectedVoice;
       utterance.onend = function() { if (callback) callback(); };
       speechSynthesis.speak(utterance);
     }
@@ -1316,13 +944,6 @@
     let _voiceTarget = null;
     let _wakeWord = DB.wakeWord();
     let _greetingDone = false;
-
-    function getTimeGreeting() {
-      const hour = new Date().getHours();
-      if (hour < 12) return 'Good morning';
-      else if (hour < 17) return 'Good afternoon';
-      else return 'Good evening';
-    }
 
     function initVoice() {
       if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
@@ -1341,8 +962,9 @@
         document.getElementById('voiceFloatText').textContent = 'Listening for "' + _wakeWord + '"...';
         if (!_greetingDone) {
           _greetingDone = true;
-          const greeting = getTimeGreeting();
-          const msg = greeting + ' Mr. Njuguna. Good to hear, which task would you like I perform this ' + (new Date().getHours() < 12 ? 'morning' : new Date().getHours() < 17 ? 'afternoon' : 'evening') + '?';
+          const hour = new Date().getHours();
+          const timeStr = hour < 12 ? 'morning' : hour < 17 ? 'afternoon' : 'evening';
+          const msg = `Good ${timeStr} Mr. Njuguna. Which task would you like me to perform?`;
           speakText(msg); addSylviaMessage('🗣️ ' + msg);
         }
       };
@@ -1408,8 +1030,23 @@
 
     initVoice();
 
+    function toggleSylviaConsole() {
+      const el = document.getElementById('sylviaConsole');
+      el.classList.toggle('visible');
+      if (el.classList.contains('visible')) { document.getElementById('sylviaChatLog').scrollTop = document.getElementById('sylviaChatLog').scrollHeight; }
+    }
+    function addSylviaMessage(text, isMe) {
+      const log = document.getElementById('sylviaChatLog');
+      const div = document.createElement('div');
+      div.className = 'msg';
+      div.innerHTML = `<span class="who ${isMe?'me':''}">${isMe?'You':'Sylvia'}</span> ${text}`;
+      log.appendChild(div);
+      log.scrollTop = log.scrollHeight;
+      while (log.children.length > 50) log.removeChild(log.firstChild);
+    }
+
     // ================================================================
-    //  AI ROBOT – LEARNING & APP MODIFICATION
+    //  AI ROBOT – LEARNING, ANALYTICS & APP MODIFICATION
     // ================================================================
     let robotOpen = false;
     let isRobotThinking = false;
@@ -1460,7 +1097,7 @@
       showRobotTyping();
 
       try {
-        // Check if the user is asking to modify the app
+        // 1. Check for App Modifications
         const modification = detectAppModification(text);
         if (modification) {
           const result = await executeAppModification(modification);
@@ -1471,7 +1108,17 @@
           return;
         }
 
-        // Check memory for similar question
+        // 2. Check for Financial Analytics Queries
+        const analytics = checkAnalyticsQuery(text);
+        if (analytics) {
+          removeRobotTyping();
+          addRobotMessage(analytics, 'bot');
+          speakText("Here are the analytics you requested.");
+          isRobotThinking = false;
+          return;
+        }
+
+        // 3. Check Memory
         const memory = DB.memory();
         for (const entry of memory) {
           if (text.toLowerCase().includes(entry.question.toLowerCase()) || entry.question.toLowerCase().includes(text.toLowerCase())) {
@@ -1483,14 +1130,13 @@
           }
         }
 
-        // Search the web for an answer
+        // 4. Web Search Fallback
         const answer = await searchWeb(text);
         removeRobotTyping();
 
         if (answer) {
           addRobotMessage(answer, 'bot');
           speakText(answer);
-          // Store in memory
           const mem = DB.memory();
           mem.push({ question: text, answer: answer, timestamp: new Date().toISOString() });
           DB.setMemory(mem);
@@ -1508,26 +1154,58 @@
       isRobotThinking = false;
     }
 
+    function checkAnalyticsQuery(text) {
+      const lower = text.toLowerCase();
+      
+      // Pending Proformas
+      if (lower.includes('pending proforma') || lower.includes('pending proformas')) {
+        const pending = DB.proformas(currentCompany).filter(p => p.status === 'pending');
+        const total = pending.reduce((sum, p) => sum + (p.grandTotal || 0), 0);
+        return `You have <strong>${pending.length}</strong> pending proformas with a total value of <strong>${formatMoney(total)}</strong>.`;
+      }
+      
+      // Total Revenue
+      if (lower.includes('total revenue') || lower.includes('how much have i made')) {
+        const receipts = DB.receipts(currentCompany);
+        const revenue = receipts.reduce((s, r) => s + (r.amount || 0), 0);
+        return `Your total revenue for ${currentCompany === 'islemedia' ? 'ISLE MEDIA' : 'ISLE POINT'} is <strong>${formatMoney(revenue)}</strong>.`;
+      }
+
+      // Total Expenditure
+      if (lower.includes('total expenditure') || lower.includes('total expenses') || lower.includes('how much have i spent')) {
+        const expenses = DB.expenses(currentCompany);
+        const total = expenses.reduce((s, e) => s + (e.amount || 0), 0);
+        return `Your total expenditure for ${currentCompany === 'islemedia' ? 'ISLE MEDIA' : 'ISLE POINT'} is <strong>${formatMoney(total)}</strong>.`;
+      }
+
+      // Net Profit
+      if (lower.includes('net profit') || lower.includes('profit')) {
+        const receipts = DB.receipts(currentCompany);
+        const expenses = DB.expenses(currentCompany);
+        const revenue = receipts.reduce((s, r) => s + (r.amount || 0), 0);
+        const expense = expenses.reduce((s, e) => s + (e.amount || 0), 0);
+        const profit = revenue - expense;
+        return `Your net profit for ${currentCompany === 'islemedia' ? 'ISLE MEDIA' : 'ISLE POINT'} is <strong>${formatMoney(profit)}</strong>.`;
+      }
+
+      return null;
+    }
+
     function detectAppModification(text) {
       const lower = text.toLowerCase();
-      // Detect client creation
+      
+      // Create Client
       const clientMatch = lower.match(/(?:create|add)\s+(?:a\s+)?client\s+(?:named|called)\s+(.+)/i);
-      if (clientMatch) {
-        return { type: 'addClient', name: clientMatch[1].trim() };
-      }
-      // Detect expense creation
+      if (clientMatch) return { type: 'addClient', name: clientMatch[1].trim() };
+      
+      // Create Expense
       const expenseMatch = lower.match(/(?:add|create)\s+(?:an\s+)?expense\s+(?:for|of)\s+([\d,]+)\s+(?:for|on)\s+(.+)/i);
-      if (expenseMatch) {
-        const amount = parseFloat(expenseMatch[1].replace(/,/g, ''));
-        const desc = expenseMatch[2].trim();
-        return { type: 'addExpense', amount, description: desc };
-      }
-      // Detect navigation
+      if (expenseMatch) return { type: 'addExpense', amount: parseFloat(expenseMatch[1].replace(/,/g, '')), description: expenseMatch[2].trim() };
+      
+      // Navigate
       if (lower.includes('go to') || lower.includes('navigate to') || lower.includes('open')) {
-        const pages = ['dashboard','clients','proforma','invoice','receipt','expenditure','reports','training','settings'];
-        for (const p of pages) {
-          if (lower.includes(p)) { return { type: 'navigate', page: p }; }
-        }
+        const pages = ['dashboard','clients','items','proforma','invoice','receipt','expenditure','reports','training','settings'];
+        for (const p of pages) { if (lower.includes(p)) return { type: 'navigate', page: p }; }
       }
       return null;
     }
@@ -1536,68 +1214,35 @@
       switch (mod.type) {
         case 'addClient': {
           const clients = DB.clients(currentCompany);
-          const newClient = {
-            id: clients.length ? Math.max(...clients.map(c=>c.id)) + 1 : 1,
-            name: mod.name,
-            tel: '', email: '', billingAddress: '', street: '', city: '', state: '', zipPostal: '', customerNo: ''
-          };
-          clients.push(newClient);
-          DB.setClients(currentCompany, clients);
-          renderAllTables();
-          return `✅ Client "${mod.name}" has been created successfully in ${currentCompany === 'islemedia' ? 'ISLE MEDIA' : 'ISLE POINT LTD'}.`;
+          const newClient = { id: clients.length ? Math.max(...clients.map(c=>c.id)) + 1 : 1, name: mod.name, tel: '', email: '', billingAddress: '', street: '', city: '', state: '', zipPostal: '', customerNo: '' };
+          clients.push(newClient); DB.setClients(currentCompany, clients); renderAllTables();
+          return `✅ Client "${mod.name}" created successfully.`;
         }
         case 'addExpense': {
           const expenses = DB.expenses(currentCompany);
-          expenses.push({
-            id: expenses.length ? Math.max(...expenses.map(e=>e.id)) + 1 : 1,
-            date: today(),
-            category: 'Other',
-            description: mod.description,
-            vendor: 'Sylvia AI',
-            amount: mod.amount || 0,
-            createdAt: new Date().toISOString()
-          });
-          DB.setExpenses(currentCompany, expenses);
-          renderAllTables();
-          return `✅ Expense of ${formatMoney(mod.amount)} for "${mod.description}" has been added.`;
+          expenses.push({ id: expenses.length ? Math.max(...expenses.map(e=>e.id)) + 1 : 1, date: today(), category: 'Other', description: mod.description, vendor: 'Sylvia AI', amount: mod.amount || 0, createdAt: new Date().toISOString() });
+          DB.setExpenses(currentCompany, expenses); renderAllTables();
+          return `✅ Expense of ${formatMoney(mod.amount)} for "${mod.description}" added.`;
         }
         case 'navigate': {
           navigateTo(mod.page);
           return `🗺️ Navigating to ${mod.page}.`;
         }
-        default:
-          return '✅ Action completed.';
+        default: return '✅ Action completed.';
       }
     }
 
-    // ================================================================
-    //  WEB SEARCH (DuckDuckGo Instant Answer API)
-    // ================================================================
     async function searchWeb(query) {
       try {
         const response = await fetch('https://api.duckduckgo.com/?q=' + encodeURIComponent(query) + '&format=json&no_html=1&skip_disambig=1');
         const data = await response.json();
-
-        if (data.AbstractText) {
-          return data.AbstractText + (data.AbstractURL ? `\n\nSource: ${data.AbstractURL}` : '');
-        }
-        if (data.Answer && data.Answer.text) {
-          return data.Answer.text;
-        }
-        if (data.Definition) {
-          return data.Definition;
-        }
+        if (data.AbstractText) return data.AbstractText;
         if (data.RelatedTopics && data.RelatedTopics.length > 0) {
           const topics = data.RelatedTopics.filter(t => t.Text).slice(0, 3);
-          if (topics.length) {
-            return topics.map(t => '• ' + t.Text).join('\n\n');
-          }
+          if (topics.length) return topics.map(t => '• ' + t.Text).join('\n\n');
         }
         return null;
-      } catch (e) {
-        console.warn('Search error:', e);
-        return null;
-      }
+      } catch (e) { return null; }
     }
 
     // ================================================================
@@ -1607,34 +1252,16 @@
       const container = document.getElementById('trainingCardsContainer');
       const training = DB.training();
       if (!training.length) {
-        container.innerHTML = `
-          <div class="training-card" style="text-align:center;padding:30px;color:var(--text-muted);">
-            <i class="fas fa-comment-dots" style="font-size:2rem;margin-bottom:12px;opacity:0.3;"></i>
-            <p>No conversations trained yet. Click <strong>"New Conversation"</strong> to teach Sylvia a full dialogue flow.</p>
-            <p style="font-size:0.8rem;margin-top:8px;">Each conversation has: <strong>Phrase → Sylvia's Voice Response → Action → Sylvia's Response</strong></p>
-          </div>
-        `;
+        container.innerHTML = `<div class="training-card" style="text-align:center;padding:30px;color:var(--text-muted);"><i class="fas fa-comment-dots" style="font-size:2rem;margin-bottom:12px;opacity:0.3;"></i><p>No conversations trained yet. Click <strong>"New Conversation"</strong> to teach Sylvia a full dialogue flow.</p></div>`;
         return;
       }
       container.innerHTML = training.map((t, index) => `
         <div class="training-card" data-index="${index}">
           <div class="fields-grid">
-            <div class="full-width">
-              <label><i class="fas fa-microphone"></i> 1. Phrase you'll say</label>
-              <input type="text" class="train-phrase" value="${t.phrase || ''}" placeholder="e.g. create a proforma for Acme" />
-            </div>
-            <div class="full-width">
-              <label><i class="fas fa-comment"></i> 2. Sylvia's voice response (what she says back to you)</label>
-              <textarea class="train-sylvia-response" rows="2" placeholder="e.g. Certainly, Mr. Njuguna. Let me create that proforma for Acme right away.">${t.sylviaResponse || ''}</textarea>
-            </div>
-            <div class="full-width">
-              <label><i class="fas fa-cogs"></i> 3. Action / Response (what Sylvia does – open field)</label>
-              <textarea class="train-action" rows="2" placeholder="e.g. create proforma for Acme with amount 500000 OR send email to john@gmail.com OR calculate 10% of 5000">${t.action || ''}</textarea>
-            </div>
-            <div class="full-width">
-              <label><i class="fas fa-check-circle"></i> 4. Sylvia's response about the action (after completing it)</label>
-              <textarea class="train-action-response" rows="2" placeholder="e.g. Done, Mr. Njuguna. The proforma has been created. You can review it now.">${t.sylviaActionResponse || ''}</textarea>
-            </div>
+            <div class="full-width"><label><i class="fas fa-microphone"></i> 1. Phrase you'll say</label><input type="text" class="train-phrase" value="${t.phrase || ''}" placeholder="e.g. create a proforma for Acme" /></div>
+            <div class="full-width"><label><i class="fas fa-comment"></i> 2. Sylvia's voice response</label><textarea class="train-sylvia-response" rows="2" placeholder="e.g. Certainly, Mr. Njuguna.">${t.sylviaResponse || ''}</textarea></div>
+            <div class="full-width"><label><i class="fas fa-cogs"></i> 3. Action / Response (what Sylvia does)</label><textarea class="train-action" rows="2" placeholder="e.g. create proforma for Acme with amount 500000">${t.action || ''}</textarea></div>
+            <div class="full-width"><label><i class="fas fa-check-circle"></i> 4. Sylvia's response about the action</label><textarea class="train-action-response" rows="2" placeholder="e.g. Done, Mr. Njuguna.">${t.sylviaActionResponse || ''}</textarea></div>
           </div>
           <div class="card-actions">
             <button class="btn btn-primary btn-sm" onclick="saveTrainingCard(${index})"><i class="fas fa-save"></i> Save</button>
@@ -1655,8 +1282,7 @@
 
     function saveTrainingCard(index) {
       const cards = document.querySelectorAll('.training-card');
-      const card = cards[index];
-      if (!card) return;
+      const card = cards[index]; if (!card) return;
       const phrase = card.querySelector('.train-phrase').value.trim();
       const sylviaResponse = card.querySelector('.train-sylvia-response').value.trim();
       const action = card.querySelector('.train-action').value.trim();
@@ -1664,31 +1290,24 @@
       if (!phrase) { alert('Please enter a phrase trigger.'); return; }
       const training = DB.training();
       training[index] = { phrase, sylviaResponse, action, sylviaActionResponse, updated: new Date().toISOString() };
-      DB.setTraining(training); renderTrainingCards();
-      addSylviaMessage(`✅ Conversation "${phrase}" saved!`);
+      DB.setTraining(training); renderTrainingCards(); addSylviaMessage(`✅ Conversation "${phrase}" saved!`);
     }
 
     function testTrainingCard(index) {
-      const training = DB.training();
-      const t = training[index];
-      if (!t || !t.phrase) { alert('This conversation is empty. Please fill in at least the phrase.'); return; }
+      const training = DB.training(); const t = training[index];
+      if (!t || !t.phrase) { alert('This conversation is empty.'); return; }
       addSylviaMessage('🧪 Testing conversation: "' + t.phrase + '"');
       if (t.sylviaResponse) { speakText(t.sylviaResponse); addSylviaMessage('🗣️ Sylvia says: ' + t.sylviaResponse); }
       if (t.action) {
         executeCustomAction(t.action).then(result => {
-          if (t.sylviaActionResponse) {
-            const finalResponse = t.sylviaActionResponse.replace(/\{result\}/g, result || 'done');
-            speakText(finalResponse); addSylviaMessage('🗣️ Sylvia says: ' + finalResponse);
-          }
+          if (t.sylviaActionResponse) { const finalResponse = t.sylviaActionResponse.replace(/\{result\}/g, result || 'done'); speakText(finalResponse); addSylviaMessage('🗣️ Sylvia says: ' + finalResponse); }
         });
       }
     }
 
     function deleteTrainingCard(index) {
       if (!confirm('Delete this conversation?')) return;
-      const training = DB.training();
-      training.splice(index, 1); DB.setTraining(training); renderTrainingCards();
-      addSylviaMessage('🗑️ Conversation deleted.');
+      const training = DB.training(); training.splice(index, 1); DB.setTraining(training); renderTrainingCards(); addSylviaMessage('🗑️ Conversation deleted.');
     }
 
     function clearTraining() {
@@ -1710,10 +1329,7 @@
           if (t.sylviaResponse) { speakText(t.sylviaResponse); addSylviaMessage('🗣️ ' + t.sylviaResponse); }
           if (t.action) {
             const actionResult = await executeCustomAction(t.action);
-            if (actionResult && t.sylviaActionResponse) {
-              const finalResponse = t.sylviaActionResponse.replace('{result}', actionResult);
-              speakText(finalResponse); addSylviaMessage('🗣️ ' + finalResponse);
-            }
+            if (actionResult && t.sylviaActionResponse) { const finalResponse = t.sylviaActionResponse.replace('{result}', actionResult); speakText(finalResponse); addSylviaMessage('🗣️ ' + finalResponse); }
           }
           return;
         }
@@ -1734,6 +1350,7 @@
       else if (cmd.includes('dashboard') || cmd.includes('home')) { navigateTo('dashboard'); }
       else if (cmd.includes('report')) { navigateTo('reports'); }
       else if (cmd.includes('client')) { navigateTo('clients'); }
+      else if (cmd.includes('item catalog')) { navigateTo('items'); }
       else if (cmd.includes('proforma')) { navigateTo('proforma'); }
       else if (cmd.includes('invoice')) { navigateTo('invoice'); }
       else if (cmd.includes('receipt')) { navigateTo('receipt'); }
@@ -1741,44 +1358,29 @@
       else {
         addSylviaMessage('🔍 Let me search that for you...');
         const answer = await searchWeb(cmd);
-        if (answer) {
-          speakText(answer); addSylviaMessage('📚 ' + answer);
-          const mem = DB.memory(); mem.push({ question: cmd, answer: answer }); DB.setMemory(mem);
-        } else {
-          const fallback = "I'm not sure about that. Could you please rephrase or teach me in Voice Training?";
-          speakText(fallback); addSylviaMessage('🤔 ' + fallback);
-        }
+        if (answer) { speakText(answer); addSylviaMessage('📚 ' + answer); const mem = DB.memory(); mem.push({ question: cmd, answer: answer }); DB.setMemory(mem); }
+        else { const fallback = "I'm not sure about that."; speakText(fallback); addSylviaMessage('🤔 ' + fallback); }
       }
     }
 
     async function executeCustomAction(actionText) {
       const lower = actionText.toLowerCase();
-      if (lower.includes('proforma') || lower.includes('create proforma')) { const r = await extractAndCreate('proforma', actionText); return r || 'Proforma created successfully.'; }
-      else if (lower.includes('invoice') || lower.includes('create invoice')) { const r = await extractAndCreate('invoice', actionText); return r || 'Invoice created successfully.'; }
-      else if (lower.includes('receipt') || lower.includes('create receipt')) { const r = await extractAndCreate('receipt', actionText); return r || 'Receipt created successfully.'; }
-      else if (lower.includes('client') || lower.includes('add client')) { const r = await extractAndCreate('client', actionText); return r || 'Client added successfully.'; }
-      else if (lower.includes('expense') || lower.includes('add expense')) { const r = await extractAndCreate('expense', actionText); return r || 'Expense added successfully.'; }
-      else if (lower.includes('dashboard') || lower.includes('go to dashboard')) { navigateTo('dashboard'); return 'Navigated to dashboard.'; }
-      else if (lower.includes('report') || lower.includes('go to reports')) { navigateTo('reports'); return 'Navigated to reports.'; }
+      if (lower.includes('proforma')) { const r = await extractAndCreate('proforma', actionText); return r || 'Proforma created successfully.'; }
+      else if (lower.includes('invoice')) { const r = await extractAndCreate('invoice', actionText); return r || 'Invoice created successfully.'; }
+      else if (lower.includes('receipt')) { const r = await extractAndCreate('receipt', actionText); return r || 'Receipt created successfully.'; }
+      else if (lower.includes('client')) { const r = await extractAndCreate('client', actionText); return r || 'Client added successfully.'; }
+      else if (lower.includes('expense')) { const r = await extractAndCreate('expense', actionText); return r || 'Expense added successfully.'; }
+      else if (lower.includes('dashboard')) { navigateTo('dashboard'); return 'Navigated to dashboard.'; }
+      else if (lower.includes('report')) { navigateTo('reports'); return 'Navigated to reports.'; }
       else if (lower.includes('calculate') && lower.includes('%')) {
         const match = lower.match(/([\d.]+)%\s*(?:of|on)?\s*([\d.]+)/);
         if (match) { const pct = parseFloat(match[1]); const num = parseFloat(match[2]); const result = (pct / 100) * num; return `${pct}% of ${num} is ${result.toFixed(2)}`; }
         return 'Calculation done.';
       }
       else if (lower.includes('email') || lower.includes('send email')) {
-        const subject = encodeURIComponent('Sylvia custom action');
-        const body = encodeURIComponent('This action was triggered by Sylvia via custom training.');
-        window.location.href = 'mailto:?subject=' + subject + '&body=' + body;
-        return 'Email composer opened.';
+        const subject = encodeURIComponent('Sylvia custom action'); const body = encodeURIComponent('This action was triggered by Sylvia via custom training.');
+        window.location.href = 'mailto:?subject=' + subject + '&body=' + body; return 'Email composer opened.';
       }
-      else if (lower.includes('search') || lower.includes('google')) {
-        const query = actionText.replace(/search|google|for/i, '').trim();
-        if (query) { const answer = await searchWeb(query); if (answer) return 'Search result: ' + answer; }
-        return 'Search completed.';
-      }
-      else if (lower.includes('thank you')) return 'You\'re welcome! It\'s my pleasure to assist you.';
-      else if (lower.includes('hello') || lower.includes('hi')) return 'Hello there! How can I help you today?';
-      else if (lower.includes('help')) return 'I can help with creating documents, managing clients, adding expenses, or answering questions. What do you need?';
       else return 'Action "' + actionText + '" executed successfully.';
     }
 
@@ -1789,10 +1391,7 @@
           if (t.sylviaResponse) { speakText(t.sylviaResponse); addSylviaMessage('🗣️ ' + t.sylviaResponse); }
           if (t.action) {
             executeCustomAction(t.action).then(result => {
-              if (t.sylviaActionResponse) {
-                const finalResponse = t.sylviaActionResponse.replace('{result}', result || 'done');
-                speakText(finalResponse); addSylviaMessage('🗣️ ' + finalResponse);
-              }
+              if (t.sylviaActionResponse) { const finalResponse = t.sylviaActionResponse.replace('{result}', result || 'done'); speakText(finalResponse); addSylviaMessage('🗣️ ' + finalResponse); }
             });
           }
           return true;
@@ -1802,8 +1401,7 @@
     }
 
     async function extractAndCreate(type, text) {
-      let clientName = '';
-      let amount = 0;
+      let clientName = ''; let amount = 0;
       const forMatch = text.match(/for\s+([A-Za-z0-9\s]+?)(?:\s+with|\s+amount|\s+of|$)/i);
       if (forMatch) clientName = forMatch[1].trim();
       const amtMatch = text.match(/(?:amount|of|ugx|usd)?\s*([\d,]+\.?[\d]*)/i);
@@ -1811,16 +1409,13 @@
 
       if (!clientName && type !== 'expense' && type !== 'client') return 'Please specify a client. Say: "for [client name]"';
 
-      const company = currentCompany;
-      const clients = DB.clients(company);
-      let client = null;
+      const company = currentCompany; const clients = DB.clients(company); let client = null;
       if (clientName) {
         client = clients.find(c => c.name.toLowerCase().includes(clientName.toLowerCase())) || clients.find(c => clientName.toLowerCase().includes(c.name.toLowerCase()));
         if (!client && type !== 'expense' && type !== 'client') return 'Client not found. Please create a client first.';
         if (!client && (type === 'client' || type === 'expense')) {
           const newClient = { id: clients.length ? Math.max(...clients.map(c=>c.id)) + 1 : 1, name: clientName, tel: '', email: '', billingAddress: '', street: '', city: '', state: '', zipPostal: '', customerNo: '' };
-          clients.push(newClient); DB.setClients(company, clients); client = newClient;
-          addSylviaMessage(`👤 Created new client: "${clientName}"`);
+          clients.push(newClient); DB.setClients(company, clients); client = newClient; addSylviaMessage(`👤 Created new client: "${clientName}"`);
         }
       }
 
@@ -1829,9 +1424,7 @@
         const desc = descMatch ? descMatch[1].trim() : 'Voice expense';
         const expenses = DB.expenses(company);
         expenses.push({ id: expenses.length ? Math.max(...expenses.map(e=>e.id)) + 1 : 1, date: today(), category: 'Other', description: desc, vendor: client ? client.name : 'Voice Entry', amount: amount || 0, createdAt: new Date().toISOString() });
-        DB.setExpenses(company, expenses);
-        const msg = `💰 Added expense: ${formatMoney(amount)} for "${desc}"`;
-        speakText(msg); addSylviaMessage(msg); renderAllTables(); return 'Expense added.';
+        DB.setExpenses(company, expenses); const msg = `💰 Added expense: ${formatMoney(amount)} for "${desc}"`; speakText(msg); addSylviaMessage(msg); renderAllTables(); return 'Expense added.';
       }
 
       if (type === 'client') {
@@ -1839,8 +1432,7 @@
           const newClient = { id: clients.length ? Math.max(...clients.map(c=>c.id)) + 1 : 1, name: clientName || 'New Client', tel: '', email: '', billingAddress: '', street: '', city: '', state: '', zipPostal: '', customerNo: '' };
           clients.push(newClient); DB.setClients(company, clients); client = newClient;
         }
-        const msg = `👤 Client "${client.name}" created.`;
-        speakText(msg); addSylviaMessage(msg); renderAllTables(); return 'Client added.';
+        const msg = `👤 Client "${client.name}" created.`; speakText(msg); addSylviaMessage(msg); renderAllTables(); return 'Client added.';
       }
 
       if (!client) return 'Client not found.';
@@ -1849,18 +1441,13 @@
       const prefix = type === 'proforma' ? 'PF' : type === 'invoice' ? 'I' : 'R';
       const counter = DB.nextCounter(company, type + 's');
       const ref = prefix + '-' + String(counter).padStart(5, '0');
-      const items = [{ particular: 'Service (via Sylvia)', qty: 1, unitPrice: amount || 0 }];
-      const total = amount || 0;
-      const companyInfo = getCompanyDetails(company);
-      const vat = companyInfo.hasVat ? total * 0.18 : 0;
-      const grandTotal = total + vat;
+      const items = [{ particular: 'Service (via Sylvia)', qty: 1, unitPrice: amount || 0, tax: false }];
+      const total = amount || 0; const companyInfo = getCompanyDetails(company);
+      const vat = companyInfo.hasVat ? total * 0.18 : 0; const grandTotal = total + vat;
       const currency = DB.currency();
 
       const data = { id: DB[type + 's'](company).length ? Math.max(...DB[type + 's'](company).map(d=>d.id)) + 1 : 1, clientId: client.id, date: today(), ref: ref, status: 'pending', items: items, total: total, vat: vat, grandTotal: grandTotal, amountInWords: numberToWords(grandTotal, currency), company: company, currency: currency, createdAt: new Date().toISOString() };
-      const listKey = type + 's';
-      const list = DB[listKey](company);
-      list.push(data);
-      DB['set' + type.charAt(0).toUpperCase() + type.slice(1) + 's'](company, list);
+      const listKey = type + 's'; const list = DB[listKey](company); list.push(data); DB['set' + type.charAt(0).toUpperCase() + type.slice(1) + 's'](company, list);
 
       const msg = `📄 Created ${docType} #${ref} for ${client.name} — ${formatMoney(grandTotal)}`;
       speakText(msg); addSylviaMessage(msg); renderAllTables();
@@ -1879,9 +1466,10 @@
     //  RENDER TABLES
     // ================================================================
     function renderAllTables() {
-      renderClients(); renderProformas(); renderInvoices(); renderReceipts(); renderExpenses(); refreshDashboard();
+      renderClients(); renderItems(); renderProformas(); renderInvoices(); renderReceipts(); renderExpenses(); refreshDashboard();
     }
 
+    // ----- CLIENTS -----
     function renderClients() {
       const tbody = document.getElementById('clientTableBody');
       const clients = DB.clients(currentCompany);
@@ -1927,28 +1515,85 @@
       e.preventDefault();
       const id = parseInt(document.getElementById('cf_id').value) || (DB.clients(currentCompany).length ? Math.max(...DB.clients(currentCompany).map(c=>c.id)) + 1 : 1);
       const data = { id, name: document.getElementById('cf_name').value.trim(), customerNo: document.getElementById('cf_customerNo').value.trim(), tel: document.getElementById('cf_tel').value.trim(), email: document.getElementById('cf_email').value.trim(), billingAddress: document.getElementById('cf_billingAddress').value.trim(), street: document.getElementById('cf_street').value.trim(), city: document.getElementById('cf_city').value.trim(), state: document.getElementById('cf_state').value.trim(), zipPostal: document.getElementById('cf_zipPostal').value.trim() };
-      let clients = DB.clients(currentCompany);
-      const idx = clients.findIndex(x => x.id === id);
+      let clients = DB.clients(currentCompany); const idx = clients.findIndex(x => x.id === id);
       if (idx >= 0) clients[idx] = data; else clients.push(data);
-      DB.setClients(currentCompany, clients); closeModal(); renderAllTables();
-      addSylviaMessage(`👤 Client "${data.name}" saved.`);
+      DB.setClients(currentCompany, clients); closeModal(); renderAllTables(); addSylviaMessage(`👤 Client "${data.name}" saved.`);
     }
 
     function editClient(id) { const c = DB.clients(currentCompany).find(x => x.id === id); if (c) openClientModal(c); }
     function deleteClient(id) { if (!confirm('Delete this client?')) return; DB.setClients(currentCompany, DB.clients(currentCompany).filter(x => x.id !== id)); renderAllTables(); }
 
-    // ----- Proforma -----
+    // ----- ITEM CATALOG -----
+    function renderItems() {
+      const tbody = document.getElementById('itemTableBody');
+      const items = DB.items(currentCompany);
+      if (!items.length) { tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted" style="padding:30px;font-weight:500;">No items in catalog yet. Add one!</td></tr>'; return; }
+      tbody.innerHTML = items.map(i => `
+        <tr>
+          <td><strong>${i.name}</strong></td>
+          <td>${formatMoney(i.price)}</td>
+          <td><span class="tag ${i.tax?'tag-overdue':'tag-pending'}">${i.tax?'Taxable':'Non-Tax'}</span></td>
+          <td style="text-align:right;">
+            <button class="btn btn-outline btn-xs" onclick="editItem(${i.id})"><i class="fas fa-edit"></i></button>
+            <button class="btn btn-danger btn-xs" onclick="deleteItem(${i.id})"><i class="fas fa-trash"></i></button>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function openItemModal(data) {
+      const isEdit = !!data;
+      const i = data || { id:0, name:'', price:0, tax:false };
+      const html = `
+        <form id="itemForm" onsubmit="saveItem(event)">
+          <input type="hidden" id="it_id" value="${i.id}" />
+          <div class="form-grid">
+            <div class="form-group"><label>Item Name *</label><input id="it_name" value="${i.name}" required placeholder="e.g. Brochure Design" /></div>
+            <div class="form-group"><label>Price (UGX) *</label><input type="number" id="it_price" value="${i.price||0}" min="0" step="0.01" required /></div>
+            <div class="form-group"><label>Tax Status</label><select id="it_tax"><option value="false" ${!i.tax?'selected':''}>Non-Taxable</option><option value="true" ${i.tax?'selected':''}>Taxable (18% VAT)</option></select></div>
+          </div>
+          <div class="modal-footer"><button type="button" class="btn btn-outline" onclick="closeModal()">Cancel</button><button type="submit" class="btn btn-primary">${isEdit?'Update':'Create'} Item</button></div>
+        </form>
+      `;
+      openModal(isEdit ? 'Edit Item' : 'New Item', html);
+    }
+
+    function saveItem(e) {
+      e.preventDefault();
+      const id = parseInt(document.getElementById('it_id').value) || (DB.items(currentCompany).length ? Math.max(...DB.items(currentCompany).map(i=>i.id)) + 1 : 1);
+      const data = { id, name: document.getElementById('it_name').value.trim(), price: parseFloat(document.getElementById('it_price').value) || 0, tax: document.getElementById('it_tax').value === 'true' };
+      let items = DB.items(currentCompany); const idx = items.findIndex(x => x.id === id);
+      if (idx >= 0) items[idx] = data; else items.push(data);
+      DB.setItems(currentCompany, items); closeModal(); renderAllTables(); addSylviaMessage(`📦 Item "${data.name}" saved to catalog.`);
+    }
+
+    function editItem(id) { const i = DB.items(currentCompany).find(x => x.id === id); if (i) openItemModal(i); }
+    function deleteItem(id) { if (!confirm('Delete this item?')) return; DB.setItems(currentCompany, DB.items(currentCompany).filter(x => x.id !== id)); renderAllTables(); }
+
+    // ----- PROFORMA -----
     function renderProformas() {
       const tbody = document.getElementById('proformaTableBody');
-      const items = DB.proformas(currentCompany);
-      if (!items.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:30px;font-weight:500;">No proformas yet.</td></tr>'; return; }
+      let items = DB.proformas(currentCompany);
+      
+      if (currentProformaFilter !== 'all') {
+        items = items.filter(p => p.status === currentProformaFilter);
+      }
+
+      if (!items.length) { tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted" style="padding:30px;font-weight:500;">No ${currentProformaFilter !== 'all' ? currentProformaFilter : ''} proformas found.</td></tr>`; return; }
+      
       tbody.innerHTML = items.map(p => `
         <tr>
           <td>${p.ref || 'PF-'+p.id}</td>
           <td>${getClientName(currentCompany, p.clientId)}</td>
           <td>${formatDate(p.date)}</td>
           <td class="fw-600">${formatMoney(p.grandTotal||p.total||0)}</td>
-          <td><span class="tag ${p.status==='paid'?'tag-paid':p.status==='overdue'?'tag-overdue':'tag-pending'}">${p.status||'pending'}</span></td>
+          <td>
+            <select onchange="updateProformaStatus(${p.id}, this.value)" style="padding:4px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:0.75rem;">
+              <option value="pending" ${p.status==='pending'?'selected':''}>Pending</option>
+              <option value="paid" ${p.status==='paid'?'selected':''}>Paid</option>
+              <option value="cancelled" ${p.status==='cancelled'?'selected':''}>Cancelled</option>
+            </select>
+          </td>
           <td style="text-align:right;">
             <button class="btn btn-gold btn-xs" onclick="viewProforma(${p.id})"><i class="fas fa-eye"></i></button>
             <button class="btn btn-outline btn-xs" onclick="printProforma(${p.id})"><i class="fas fa-print"></i></button>
@@ -1958,19 +1603,43 @@
       `).join('');
     }
 
+    function filterProforma(status) {
+      currentProformaFilter = status;
+      document.querySelectorAll('#page-proforma .btn-outline').forEach(b => b.classList.remove('active-tab'));
+      // Simple visual toggle for tabs (you can enhance this)
+      renderProformas();
+    }
+
+    function updateProformaStatus(id, newStatus) {
+      let list = DB.proformas(currentCompany);
+      const idx = list.findIndex(x => x.id === id);
+      if (idx >= 0) { list[idx].status = newStatus; DB.setProformas(currentCompany, list); refreshDashboard(); }
+    }
+
     function openProformaModal(data) {
       const isEdit = !!data;
-      const p = data || { id:0, clientId:'', date:today(), items:[{particular:'', qty:1, unitPrice:0}], total:0, vat:0, grandTotal:0, status:'pending', ref:'', company:currentCompany };
+      const p = data || { id:0, clientId:'', date:today(), items:[{particular:'', qty:1, unitPrice:0, tax:false}], total:0, vat:0, grandTotal:0, status:'pending', ref:'', company:currentCompany };
       const clients = DB.clients(currentCompany);
       const clientOpts = clients.map(c => `<option value="${c.id}" ${c.id==p.clientId?'selected':''}>${c.name}</option>`).join('');
+      const catalogItems = DB.items(currentCompany);
+      const itemOpts = catalogItems.map(i => `<option value="${i.id}">${i.name} - ${formatMoney(i.price)}</option>`).join('');
+      
       let itemsHtml = p.items.map((it, i) => `
         <tr>
-          <td><input type="text" class="pf-particular-${i}" value="${it.particular||''}" placeholder="Service / Product" style="min-width:120px;" /></td>
+          <td>
+            <select class="pf-catalog-${i}" onchange="fillItemFromCatalog(this, ${i})" style="width:100%; margin-bottom:4px;">
+              <option value="">-- Select from Catalog --</option>
+              ${catalogItems.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+            </select>
+            <input type="text" class="pf-particular-${i}" value="${it.particular||''}" placeholder="Service / Product" style="min-width:120px;" />
+          </td>
           <td><input type="number" class="pf-qty-${i}" value="${it.qty||1}" min="1" style="width:80px;" /></td>
           <td><input type="number" class="pf-price-${i}" value="${it.unitPrice||0}" min="0" step="0.01" style="width:110px;" /></td>
+          <td style="text-align:center;"><input type="checkbox" class="pf-tax-${i}" ${it.tax?'checked':''} style="width:20px;height:20px;" /></td>
           <td><button type="button" class="btn btn-danger btn-xs" onclick="removePfRow(${i})"><i class="fas fa-times"></i></button></td>
         </tr>
       `).join('');
+
       const html = `
         <form id="proformaForm" onsubmit="saveProforma(event)">
           <input type="hidden" id="pf_id" value="${p.id}" />
@@ -1978,7 +1647,6 @@
             <div class="form-group"><label>Client *</label><select id="pf_clientId" required><option value="">Select client</option>${clientOpts}</select></div>
             <div class="form-group"><label>Date</label><input type="date" id="pf_date" value="${p.date||today()}" /></div>
             <div class="form-group"><label>Ref (auto)</label><input id="pf_ref" value="${p.ref||'PF-'+String(DB.counter(currentCompany,'proformas')+1).padStart(5,'0')}" placeholder="Auto" readonly style="background:var(--input-bg);" /></div>
-            <div class="form-group"><label>Status</label><select id="pf_status"><option value="pending" ${p.status==='pending'?'selected':''}>Pending</option><option value="paid" ${p.status==='paid'?'selected':''}>Paid</option><option value="overdue" ${p.status==='overdue'?'selected':''}>Overdue</option></select></div>
             <div class="form-group"><label>Currency</label><select id="pf_currency">
               <option value="UGX" ${DB.currency()==='UGX'?'selected':''}>UGX</option>
               <option value="USD" ${DB.currency()==='USD'?'selected':''}>USD</option>
@@ -1990,13 +1658,13 @@
           </div>
           <div class="items-editor">
             <label style="font-weight:700;font-size:0.85rem;display:block;margin:14px 0 6px;color:var(--text-muted);">Line Items</label>
-            <table><thead><tr><th>Particular</th><th>Qty</th><th>Unit Price</th><th style="width:50px;"></th></tr></thead>
+            <table><thead><tr><th>Particular</th><th>Qty</th><th>Unit Price</th><th>Tax?</th><th style="width:50px;"></th></tr></thead>
             <tbody id="pfItemsBody">${itemsHtml}</tbody></table>
             <button type="button" class="btn btn-outline btn-sm" onclick="addPfRow()"><i class="fas fa-plus"></i> Add item</button>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:16px;">
             <div class="form-group"><label>Subtotal</label><input type="number" id="pf_total" value="${p.total||0}" step="0.01" readonly style="background:var(--input-bg);" /></div>
-            <div class="form-group"><label>VAT (if applicable)</label><input type="number" id="pf_vat" value="${p.vat||0}" step="0.01" readonly style="background:var(--input-bg);" /></div>
+            <div class="form-group"><label>VAT (18% on taxable items)</label><input type="number" id="pf_vat" value="${p.vat||0}" step="0.01" readonly style="background:var(--input-bg);" /></div>
             <div class="form-group"><label>Grand Total</label><input type="number" id="pf_grandTotal" value="${p.grandTotal||0}" step="0.01" readonly style="background:var(--input-bg);font-weight:700;color:var(--neon);" /></div>
           </div>
           <div class="form-group"><label>Amount in Words</label><input id="pf_words" value="${p.amountInWords||''}" placeholder="Auto-generated" readonly style="background:var(--input-bg);" /></div>
@@ -2004,29 +1672,69 @@
         </form>
       `;
       openModal(isEdit ? 'Edit Proforma' : 'New Proforma', html);
-      setTimeout(() => { document.querySelectorAll('#pfItemsBody input').forEach(el => el.addEventListener('input', recalcPf)); recalcPf(); }, 50);
+      setTimeout(() => {
+        document.querySelectorAll('#pfItemsBody input[type="number"]').forEach(el => el.addEventListener('input', recalcPf));
+        document.querySelectorAll('#pfItemsBody input[type="checkbox"]').forEach(el => el.addEventListener('change', recalcPf));
+        recalcPf();
+      }, 50);
+    }
+
+    function fillItemFromCatalog(selectEl, idx) {
+      const itemId = parseInt(selectEl.value);
+      if (!itemId) return;
+      const item = DB.items(currentCompany).find(i => i.id === itemId);
+      if (item) {
+        document.querySelector(`.pf-particular-${idx}`).value = item.name;
+        document.querySelector(`.pf-price-${idx}`).value = item.price;
+        document.querySelector(`.pf-tax-${idx}`).checked = item.tax;
+        recalcPf();
+      }
     }
 
     function addPfRow() {
       const tbody = document.getElementById('pfItemsBody');
       const idx = tbody.children.length;
+      const catalogItems = DB.items(currentCompany);
       const tr = document.createElement('tr');
       tr.innerHTML = `
-        <td><input type="text" class="pf-particular-${idx}" placeholder="Service / Product" style="min-width:120px;" /></td>
+        <td>
+          <select class="pf-catalog-${idx}" onchange="fillItemFromCatalog(this, ${idx})" style="width:100%; margin-bottom:4px;">
+            <option value="">-- Select from Catalog --</option>
+            ${catalogItems.map(c => `<option value="${c.id}">${c.name}</option>`).join('')}
+          </select>
+          <input type="text" class="pf-particular-${idx}" placeholder="Service / Product" style="min-width:120px;" />
+        </td>
         <td><input type="number" class="pf-qty-${idx}" value="1" min="1" style="width:80px;" /></td>
         <td><input type="number" class="pf-price-${idx}" value="0" min="0" step="0.01" style="width:110px;" /></td>
+        <td style="text-align:center;"><input type="checkbox" class="pf-tax-${idx}" style="width:20px;height:20px;" /></td>
         <td><button type="button" class="btn btn-danger btn-xs" onclick="this.closest('tr').remove();recalcPf();"><i class="fas fa-times"></i></button></td>
       `;
-      tbody.appendChild(tr); tr.querySelectorAll('input').forEach(el => el.addEventListener('input', recalcPf)); recalcPf();
+      tbody.appendChild(tr);
+      tr.querySelectorAll('input[type="number"]').forEach(el => el.addEventListener('input', recalcPf));
+      tr.querySelectorAll('input[type="checkbox"]').forEach(el => el.addEventListener('change', recalcPf));
+      recalcPf();
     }
+
     function removePfRow(idx) { const tbody = document.getElementById('pfItemsBody'); if (tbody.children.length <= 1) return; const rows = tbody.children; if (idx < rows.length) rows[idx].remove(); recalcPf(); }
+
     function recalcPf() {
       const tbody = document.getElementById('pfItemsBody'); if (!tbody) return;
-      let total = 0;
-      for (const row of tbody.children) { const qty = parseFloat(row.querySelector('input[type="number"]')?.value) || 0; const price = parseFloat(row.querySelectorAll('input[type="number"]')[1]?.value) || 0; total += qty * price; }
-      const company = currentCompany; const companyInfo = getCompanyDetails(company); const vat = companyInfo.hasVat ? total * 0.18 : 0; const grand = total + vat;
-      document.getElementById('pf_total').value = total.toFixed(2); document.getElementById('pf_vat').value = vat.toFixed(2); document.getElementById('pf_grandTotal').value = grand.toFixed(2);
-      const currency = document.getElementById('pf_currency')?.value || DB.currency(); document.getElementById('pf_words').value = numberToWords(grand, currency);
+      let subtotal = 0;
+      let vat = 0;
+      for (const row of tbody.children) {
+        const qty = parseFloat(row.querySelector('input[type="number"]')?.value) || 0;
+        const price = parseFloat(row.querySelectorAll('input[type="number"]')[1]?.value) || 0;
+        const isTax = row.querySelector('input[type="checkbox"]')?.checked;
+        const lineTotal = qty * price;
+        subtotal += lineTotal;
+        if (isTax) vat += lineTotal * 0.18;
+      }
+      const grand = subtotal + vat;
+      document.getElementById('pf_total').value = subtotal.toFixed(2);
+      document.getElementById('pf_vat').value = vat.toFixed(2);
+      document.getElementById('pf_grandTotal').value = grand.toFixed(2);
+      const currency = document.getElementById('pf_currency')?.value || DB.currency();
+      document.getElementById('pf_words').value = numberToWords(grand, currency);
     }
 
     function saveProforma(e) {
@@ -2034,20 +1742,36 @@
       const id = parseInt(document.getElementById('pf_id').value) || (DB.proformas(currentCompany).length ? Math.max(...DB.proformas(currentCompany).map(d=>d.id)) + 1 : 1);
       const clientId = parseInt(document.getElementById('pf_clientId').value); if (!clientId) { alert('Please select a client.'); return; }
       const date = document.getElementById('pf_date').value; const ref = document.getElementById('pf_ref').value.trim() || 'PF-' + String(DB.nextCounter(currentCompany,'proformas')).padStart(5,'0');
-      const status = document.getElementById('pf_status').value; const currency = document.getElementById('pf_currency').value; DB.setCurrency(currency);
+      const currency = document.getElementById('pf_currency').value; DB.setCurrency(currency);
+      
       const tbody = document.getElementById('pfItemsBody'); const items = [];
-      for (const row of tbody.children) { const inputs = row.querySelectorAll('input'); if (inputs.length >= 3) { const particular = inputs[0].value.trim(); const qty = parseFloat(inputs[1].value) || 0; const unitPrice = parseFloat(inputs[2].value) || 0; if (particular && qty > 0) items.push({ particular, qty, unitPrice }); } }
-      const total = parseFloat(document.getElementById('pf_total').value) || 0; const vat = parseFloat(document.getElementById('pf_vat').value) || 0; const grandTotal = parseFloat(document.getElementById('pf_grandTotal').value) || 0; const amountInWords = document.getElementById('pf_words').value || numberToWords(grandTotal, currency);
-      const data = { id, clientId, date, ref, status, items, total, vat, grandTotal, amountInWords, company: currentCompany, currency, createdAt: new Date().toISOString() };
+      for (const row of tbody.children) {
+        const inputs = row.querySelectorAll('input');
+        if (inputs.length >= 3) {
+          const particular = inputs[0].value.trim();
+          const qty = parseFloat(inputs[1].value) || 0;
+          const unitPrice = parseFloat(inputs[2].value) || 0;
+          const tax = row.querySelector('input[type="checkbox"]')?.checked || false;
+          if (particular && qty > 0) items.push({ particular, qty, unitPrice, tax });
+        }
+      }
+      
+      const total = parseFloat(document.getElementById('pf_total').value) || 0;
+      const vat = parseFloat(document.getElementById('pf_vat').value) || 0;
+      const grandTotal = parseFloat(document.getElementById('pf_grandTotal').value) || 0;
+      const amountInWords = document.getElementById('pf_words').value || numberToWords(grandTotal, currency);
+      
+      const data = { id, clientId, date, ref, status: 'pending', items, total, vat, grandTotal, amountInWords, company: currentCompany, currency, createdAt: new Date().toISOString() };
       let list = DB.proformas(currentCompany); const idx = list.findIndex(x => x.id === id); if (idx >= 0) list[idx] = data; else list.push(data);
       DB.setProformas(currentCompany, list); closeModal(); renderAllTables(); addSylviaMessage(`📄 Proforma ${ref} created for ${getClientName(currentCompany, clientId)}`);
+      setTimeout(() => viewProforma(data.id), 500); // Show preview immediately
     }
 
     function viewProforma(id) { const p = DB.proformas(currentCompany).find(x => x.id === id); if (!p) return; openDocumentPreview('Proforma Invoice', p); }
     function printProforma(id) { const p = DB.proformas(currentCompany).find(x => x.id === id); if (!p) return; openDocumentPreview('Proforma Invoice', p, true); }
     function deleteProforma(id) { if (!confirm('Delete this proforma?')) return; DB.setProformas(currentCompany, DB.proformas(currentCompany).filter(x => x.id !== id)); renderAllTables(); }
 
-    // ====== INVOICE ======
+    // ----- INVOICE (Child of Proforma) -----
     function renderInvoices() {
       const tbody = document.getElementById('invoiceTableBody'); const items = DB.invoices(currentCompany);
       if (!items.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:30px;font-weight:500;">No invoices yet.</td></tr>'; return; }
@@ -2069,7 +1793,8 @@
 
     function openInvoiceModal(data) {
       const isEdit = !!data;
-      const p = data || { id:0, clientId:'', date:today(), items:[{particular:'', qty:1, unitPrice:0}], total:0, vat:0, grandTotal:0, status:'pending', ref:'', company:currentCompany };
+      const p = data || { id:0, clientId:'', date:today(), items:[{particular:'', qty:1, unitPrice:0, tax:false}], total:0, vat:0, grandTotal:0, status:'pending', ref:'', company:currentCompany };
+      // Simplified modal for direct invoice creation (can be expanded to include catalog like Proforma)
       const clients = DB.clients(currentCompany);
       const clientOpts = clients.map(c => `<option value="${c.id}" ${c.id==p.clientId?'selected':''}>${c.name}</option>`).join('');
       let itemsHtml = p.items.map((it, i) => `
@@ -2077,6 +1802,7 @@
           <td><input type="text" class="inv-particular-${i}" value="${it.particular||''}" placeholder="Service / Product" style="min-width:120px;" /></td>
           <td><input type="number" class="inv-qty-${i}" value="${it.qty||1}" min="1" style="width:80px;" /></td>
           <td><input type="number" class="inv-price-${i}" value="${it.unitPrice||0}" min="0" step="0.01" style="width:110px;" /></td>
+          <td style="text-align:center;"><input type="checkbox" class="inv-tax-${i}" ${it.tax?'checked':''} style="width:20px;height:20px;" /></td>
           <td><button type="button" class="btn btn-danger btn-xs" onclick="removeInvRow(${i})"><i class="fas fa-times"></i></button></td>
         </tr>
       `).join('');
@@ -2099,13 +1825,13 @@
           </div>
           <div class="items-editor">
             <label style="font-weight:700;font-size:0.85rem;display:block;margin:14px 0 6px;color:var(--text-muted);">Line Items</label>
-            <table><thead><tr><th>Particular</th><th>Qty</th><th>Unit Price</th><th style="width:50px;"></th></tr></thead>
+            <table><thead><tr><th>Particular</th><th>Qty</th><th>Unit Price</th><th>Tax?</th><th style="width:50px;"></th></tr></thead>
             <tbody id="invItemsBody">${itemsHtml}</tbody></table>
             <button type="button" class="btn btn-outline btn-sm" onclick="addInvRow()"><i class="fas fa-plus"></i> Add item</button>
           </div>
           <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-top:16px;">
             <div class="form-group"><label>Subtotal</label><input type="number" id="inv_total" value="${p.total||0}" step="0.01" readonly style="background:var(--input-bg);" /></div>
-            <div class="form-group"><label>VAT (if applicable)</label><input type="number" id="inv_vat" value="${p.vat||0}" step="0.01" readonly style="background:var(--input-bg);" /></div>
+            <div class="form-group"><label>VAT (18%)</label><input type="number" id="inv_vat" value="${p.vat||0}" step="0.01" readonly style="background:var(--input-bg);" /></div>
             <div class="form-group"><label>Grand Total</label><input type="number" id="inv_grandTotal" value="${p.grandTotal||0}" step="0.01" readonly style="background:var(--input-bg);font-weight:700;color:var(--neon);" /></div>
           </div>
           <div class="form-group"><label>Amount in Words</label><input id="inv_words" value="${p.amountInWords||''}" placeholder="Auto-generated" readonly style="background:var(--input-bg);" /></div>
@@ -2113,7 +1839,11 @@
         </form>
       `;
       openModal(isEdit ? 'Edit Invoice' : 'New Invoice', html);
-      setTimeout(() => { document.querySelectorAll('#invItemsBody input').forEach(el => el.addEventListener('input', recalcInv)); recalcInv(); }, 50);
+      setTimeout(() => {
+        document.querySelectorAll('#invItemsBody input[type="number"]').forEach(el => el.addEventListener('input', recalcInv));
+        document.querySelectorAll('#invItemsBody input[type="checkbox"]').forEach(el => el.addEventListener('change', recalcInv));
+        recalcInv();
+      }, 50);
     }
 
     function addInvRow() {
@@ -2123,18 +1853,33 @@
         <td><input type="text" class="inv-particular-${idx}" placeholder="Service / Product" style="min-width:120px;" /></td>
         <td><input type="number" class="inv-qty-${idx}" value="1" min="1" style="width:80px;" /></td>
         <td><input type="number" class="inv-price-${idx}" value="0" min="0" step="0.01" style="width:110px;" /></td>
+        <td style="text-align:center;"><input type="checkbox" class="inv-tax-${idx}" style="width:20px;height:20px;" /></td>
         <td><button type="button" class="btn btn-danger btn-xs" onclick="this.closest('tr').remove();recalcInv();"><i class="fas fa-times"></i></button></td>
       `;
-      tbody.appendChild(tr); tr.querySelectorAll('input').forEach(el => el.addEventListener('input', recalcInv)); recalcInv();
+      tbody.appendChild(tr); 
+      tr.querySelectorAll('input[type="number"]').forEach(el => el.addEventListener('input', recalcInv));
+      tr.querySelectorAll('input[type="checkbox"]').forEach(el => el.addEventListener('change', recalcInv));
+      recalcInv();
     }
     function removeInvRow(idx) { const tbody = document.getElementById('invItemsBody'); if (tbody.children.length <= 1) return; const rows = tbody.children; if (idx < rows.length) rows[idx].remove(); recalcInv(); }
+    
     function recalcInv() {
       const tbody = document.getElementById('invItemsBody'); if (!tbody) return;
-      let total = 0;
-      for (const row of tbody.children) { const qty = parseFloat(row.querySelector('input[type="number"]')?.value) || 0; const price = parseFloat(row.querySelectorAll('input[type="number"]')[1]?.value) || 0; total += qty * price; }
-      const company = currentCompany; const companyInfo = getCompanyDetails(company); const vat = companyInfo.hasVat ? total * 0.18 : 0; const grand = total + vat;
-      document.getElementById('inv_total').value = total.toFixed(2); document.getElementById('inv_vat').value = vat.toFixed(2); document.getElementById('inv_grandTotal').value = grand.toFixed(2);
-      const currency = document.getElementById('inv_currency')?.value || DB.currency(); document.getElementById('inv_words').value = numberToWords(grand, currency);
+      let subtotal = 0; let vat = 0;
+      for (const row of tbody.children) {
+        const qty = parseFloat(row.querySelector('input[type="number"]')?.value) || 0;
+        const price = parseFloat(row.querySelectorAll('input[type="number"]')[1]?.value) || 0;
+        const isTax = row.querySelector('input[type="checkbox"]')?.checked;
+        const lineTotal = qty * price;
+        subtotal += lineTotal;
+        if (isTax) vat += lineTotal * 0.18;
+      }
+      const grand = subtotal + vat;
+      document.getElementById('inv_total').value = subtotal.toFixed(2); 
+      document.getElementById('inv_vat').value = vat.toFixed(2); 
+      document.getElementById('inv_grandTotal').value = grand.toFixed(2);
+      const currency = document.getElementById('inv_currency')?.value || DB.currency(); 
+      document.getElementById('inv_words').value = numberToWords(grand, currency);
     }
 
     function saveInvoice(e) {
@@ -2144,18 +1889,28 @@
       const date = document.getElementById('inv_date').value; const ref = document.getElementById('inv_ref').value.trim() || 'I-' + String(DB.nextCounter(currentCompany,'invoices')).padStart(5,'0');
       const status = document.getElementById('inv_status').value; const currency = document.getElementById('inv_currency').value; DB.setCurrency(currency);
       const tbody = document.getElementById('invItemsBody'); const items = [];
-      for (const row of tbody.children) { const inputs = row.querySelectorAll('input'); if (inputs.length >= 3) { const particular = inputs[0].value.trim(); const qty = parseFloat(inputs[1].value) || 0; const unitPrice = parseFloat(inputs[2].value) || 0; if (particular && qty > 0) items.push({ particular, qty, unitPrice }); } }
+      for (const row of tbody.children) { 
+        const inputs = row.querySelectorAll('input'); 
+        if (inputs.length >= 3) { 
+          const particular = inputs[0].value.trim(); 
+          const qty = parseFloat(inputs[1].value) || 0; 
+          const unitPrice = parseFloat(inputs[2].value) || 0; 
+          const tax = row.querySelector('input[type="checkbox"]')?.checked || false;
+          if (particular && qty > 0) items.push({ particular, qty, unitPrice, tax }); 
+        } 
+      }
       const total = parseFloat(document.getElementById('inv_total').value) || 0; const vat = parseFloat(document.getElementById('inv_vat').value) || 0; const grandTotal = parseFloat(document.getElementById('inv_grandTotal').value) || 0; const amountInWords = document.getElementById('inv_words').value || numberToWords(grandTotal, currency);
       const data = { id, clientId, date, ref, status, items, total, vat, grandTotal, amountInWords, company: currentCompany, currency, createdAt: new Date().toISOString() };
       let list = DB.invoices(currentCompany); const idx = list.findIndex(x => x.id === id); if (idx >= 0) list[idx] = data; else list.push(data);
       DB.setInvoices(currentCompany, list); closeModal(); renderAllTables(); addSylviaMessage(`📄 Invoice ${ref} created for ${getClientName(currentCompany, clientId)}`);
+      setTimeout(() => viewInvoice(data.id), 500);
     }
 
     function viewInvoice(id) { const p = DB.invoices(currentCompany).find(x => x.id === id); if (!p) return; openDocumentPreview('Invoice', p); }
     function printInvoice(id) { const p = DB.invoices(currentCompany).find(x => x.id === id); if (!p) return; openDocumentPreview('Invoice', p, true); }
     function deleteInvoice(id) { if (!confirm('Delete this invoice?')) return; DB.setInvoices(currentCompany, DB.invoices(currentCompany).filter(x => x.id !== id)); renderAllTables(); }
 
-    // ====== RECEIPT ======
+    // ----- RECEIPT (Child of Proforma) -----
     function renderReceipts() {
       const tbody = document.getElementById('receiptTableBody'); const items = DB.receipts(currentCompany);
       if (!items.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:30px;font-weight:500;">No receipts yet.</td></tr>'; return; }
@@ -2217,13 +1972,14 @@
       const data = { id, clientId, date, ref, invoiceRef, amount, method, company: currentCompany, currency, amountInWords, createdAt: new Date().toISOString() };
       let list = DB.receipts(currentCompany); const idx = list.findIndex(x => x.id === id); if (idx >= 0) list[idx] = data; else list.push(data);
       DB.setReceipts(currentCompany, list); closeModal(); renderAllTables(); addSylviaMessage(`🧾 Receipt ${ref} created for ${getClientName(currentCompany, clientId)} — ${formatMoney(amount)}`);
+      setTimeout(() => viewReceipt(data.id), 500);
     }
 
     function viewReceipt(id) { const p = DB.receipts(currentCompany).find(x => x.id === id); if (!p) return; openDocumentPreview('Receipt', p); }
     function printReceipt(id) { const p = DB.receipts(currentCompany).find(x => x.id === id); if (!p) return; openDocumentPreview('Receipt', p, true); }
     function deleteReceipt(id) { if (!confirm('Delete this receipt?')) return; DB.setReceipts(currentCompany, DB.receipts(currentCompany).filter(x => x.id !== id)); renderAllTables(); }
 
-    // ====== EXPENDITURE ======
+    // ----- EXPENDITURE -----
     function renderExpenses() {
       const tbody = document.getElementById('expenseTableBody'); const items = DB.expenses(currentCompany);
       if (!items.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:30px;font-weight:500;">No expenses recorded.</td></tr>'; return; }
@@ -2276,7 +2032,7 @@
     function deleteExpense(id) { if (!confirm('Delete this expense?')) return; DB.setExpenses(currentCompany, DB.expenses(currentCompany).filter(x => x.id !== id)); renderAllTables(); }
 
     // ================================================================
-    //  DOCUMENT PREVIEW
+    //  DOCUMENT PREVIEW & PDF GENERATION
     // ================================================================
     function openDocumentPreview(title, doc, printMode = false) {
       const client = getClient(currentCompany, doc.clientId); if (!client) { alert('Client not found.'); return; }
@@ -2290,8 +2046,16 @@
 
       const total = doc.total || doc.amount || 0; const vat = doc.vat || 0; const grandTotal = doc.grandTotal || doc.amount || 0;
 
+      let actionButtons = '';
+      if (title === 'Proforma Invoice') {
+        actionButtons = `
+          <button class="btn btn-success" onclick="convertProformaToInvoice(${doc.id})"><i class="fas fa-file-invoice-dollar"></i> Create Invoice</button>
+          <button class="btn btn-gold" onclick="convertProformaToReceipt(${doc.id})"><i class="fas fa-receipt"></i> Create Receipt</button>
+        `;
+      }
+
       const html = `
-        <div class="doc-preview-wrapper no-print">
+        <div class="doc-preview-wrapper no-print" id="docPreviewContainer">
           <div class="doc-a4" id="docA4">
             <div class="doc-header">
               ${watermarkData ? `<div class="watermark"><img src="${watermarkData}" alt="Watermark" /></div>` : ''}
@@ -2340,7 +2104,7 @@
             </div>
             <div class="doc-totals">
               <div class="row"><span class="lbl">Subtotal:</span><span class="amt">${formatMoney(total, currency)}</span></div>
-              ${companyInfo.hasVat ? `<div class="row"><span class="lbl">VAT (18%):</span><span class="amt">${formatMoney(vat, currency)}</span></div>` : ''}
+              ${vat > 0 ? `<div class="row"><span class="lbl">VAT (18%):</span><span class="amt">${formatMoney(vat, currency)}</span></div>` : ''}
               <div class="row grand"><span class="lbl">TOTAL AMOUNT:</span><span class="amt">${formatMoney(grandTotal, currency)}</span></div>
             </div>
             <div class="doc-amount-words">
@@ -2359,61 +2123,176 @@
               <span class="contact-item"><i class="fas fa-envelope"></i> ${companyInfo.email}</span>
             </div>
           </div>
+          
           <div style="display:flex;justify-content:center;gap:16px;margin-top:20px;flex-wrap:wrap;">
-            <button class="btn btn-outline" onclick="closeModal()"><i class="fas fa-undo"></i> Amend</button>
-            <button class="btn btn-success" onclick="approveDocument('${title}', '${doc.ref}')"><i class="fas fa-check"></i> Approved &amp; Send Email</button>
-            <button class="btn btn-primary" onclick="printDocA4()"><i class="fas fa-print"></i> Print</button>
+            ${actionButtons}
+            <button class="btn btn-primary" onclick="generatePDF('${title}', '${doc.ref}')"><i class="fas fa-file-pdf"></i> Download PDF</button>
+            <button class="btn btn-outline" onclick="closeModal()"><i class="fas fa-times"></i> Close</button>
           </div>
         </div>
       `;
-      openModal('Document Preview', html);
-      if (printMode) setTimeout(() => printDocA4(), 500);
+      openModal(title + ' Preview', html);
     }
 
-    function printDocA4() {
-      const content = document.getElementById('docA4'); if (!content) return;
-      const win = window.open('', '_blank', 'width=900,height=700');
-      win.document.write(`<html><head><title>Print Document</title><style>@page { margin: 0; size: A4; } body { margin: 0; padding: 0; background: #fff; } .doc-a4 { width: 210mm; min-height: 297mm; margin: 0 auto; background: #fff; } ${document.querySelector('style').innerHTML}</style></head><body>${content.outerHTML}</body></html>`);
-      win.document.close(); setTimeout(() => { win.print(); }, 500);
+    function generatePDF(title, ref) {
+      const element = document.getElementById('docA4');
+      const opt = {
+        margin: 0,
+        filename: `${title.replace(/\s+/g, '_')}_${ref}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      // Generate PDF and show preview
+      html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
+        const totalPages = pdf.internal.getNumberOfPages();
+        // Convert first page to image for preview
+        const canvas = document.createElement('canvas');
+        html2canvas(element, { scale: 2 }).then(c => {
+          const imgData = c.toDataURL('image/jpeg');
+          document.getElementById('pdfPreviewImage').src = imgData;
+          document.getElementById('pdfPreviewOverlay').classList.add('visible');
+          
+          // Setup download button
+          document.getElementById('downloadPdfBtn').onclick = function() {
+            html2pdf().set(opt).from(element).save();
+            closePdfPreview();
+          };
+        });
+      });
     }
 
-    function approveDocument(title, ref) {
-      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-      const osc = audioCtx.createOscillator(); const gain = audioCtx.createGain(); osc.connect(gain); gain.connect(audioCtx.destination); osc.frequency.value = 880; gain.gain.value = 0.3; osc.start(); setTimeout(() => { osc.stop(); }, 200);
-      setTimeout(() => { const osc2 = audioCtx.createOscillator(); const gain2 = audioCtx.createGain(); osc2.connect(gain2); gain2.connect(audioCtx.destination); osc2.frequency.value = 1100; gain2.gain.value = 0.3; osc2.start(); setTimeout(() => { osc2.stop(); }, 200); }, 250);
-      addSylviaMessage('✅ Document ' + ref + ' approved! Thank you.');
-      const subject = encodeURIComponent(title + ' ' + ref); const body = encodeURIComponent('Dear Sir/Madam,\n\nPlease find attached the ' + title + ' ' + ref + ' for your review.\n\nThank you.\n\nRegards,\nISLE MEDIA');
-      window.location.href = 'mailto:?subject=' + subject + '&body=' + body;
-      setTimeout(() => { closeModal(); const dashLink = document.querySelector('.sidebar-nav a[data-page="dashboard"]'); if (dashLink) dashLink.click(); addSylviaMessage('🏠 Returned to dashboard.'); }, 1000);
+    function closePdfPreview() {
+      document.getElementById('pdfPreviewOverlay').classList.remove('visible');
+    }
+
+    // ================================================================
+    //  PROFORMA TO INVOICE/RECEIPT CONVERSION
+    // ================================================================
+    function convertProformaToInvoice(proformaId) {
+      const p = DB.proformas(currentCompany).find(x => x.id === proformaId);
+      if (!p) return;
+
+      const invoiceId = DB.invoices(currentCompany).length ? Math.max(...DB.invoices(currentCompany).map(d=>d.id)) + 1 : 1;
+      const ref = 'I-' + String(DB.nextCounter(currentCompany, 'invoices')).padStart(5, '0');
+      
+      const invoiceData = {
+        id: invoiceId,
+        clientId: p.clientId,
+        date: today(),
+        ref: ref,
+        status: 'pending',
+        items: p.items,
+        total: p.total,
+        vat: p.vat,
+        grandTotal: p.grandTotal,
+        amountInWords: p.amountInWords,
+        company: currentCompany,
+        currency: p.currency,
+        parentProforma: p.ref, // Link to parent
+        createdAt: new Date().toISOString()
+      };
+
+      let list = DB.invoices(currentCompany);
+      list.push(invoiceData);
+      DB.setInvoices(currentCompany, list);
+      
+      // Update Proforma status to Paid (assuming Invoice creation means it's processed)
+      updateProformaStatus(proformaId, 'paid');
+
+      closeModal();
+      renderAllTables();
+      addSylviaMessage(`✅ Invoice ${ref} created from Proforma ${p.ref}.`);
+      setTimeout(() => viewInvoice(invoiceId), 500);
+    }
+
+    function convertProformaToReceipt(proformaId) {
+      const p = DB.proformas(currentCompany).find(x => x.id === proformaId);
+      if (!p) return;
+
+      const receiptId = DB.receipts(currentCompany).length ? Math.max(...DB.receipts(currentCompany).map(d=>d.id)) + 1 : 1;
+      const ref = 'R-' + String(DB.nextCounter(currentCompany, 'receipts')).padStart(5, '0');
+      
+      const receiptData = {
+        id: receiptId,
+        clientId: p.clientId,
+        date: today(),
+        ref: ref,
+        invoiceRef: p.ref, // Link to parent Proforma
+        amount: p.grandTotal,
+        method: 'Bank Transfer', // Default
+        company: currentCompany,
+        currency: p.currency,
+        amountInWords: p.amountInWords,
+        parentProforma: p.ref, // Link to parent
+        createdAt: new Date().toISOString()
+      };
+
+      let list = DB.receipts(currentCompany);
+      list.push(receiptData);
+      DB.setReceipts(currentCompany, list);
+      
+      // Update Proforma status to Paid
+      updateProformaStatus(proformaId, 'paid');
+
+      closeModal();
+      renderAllTables();
+      addSylviaMessage(`✅ Receipt ${ref} created from Proforma ${p.ref}.`);
+      setTimeout(() => viewReceipt(receiptId), 500);
     }
 
     // ================================================================
     //  DASHBOARD & REPORTS
     // ================================================================
     function refreshDashboard() {
-      const clients = DB.clients(currentCompany); const proformas = DB.proformas(currentCompany); const invoices = DB.invoices(currentCompany); const receipts = DB.receipts(currentCompany); const expenses = DB.expenses(currentCompany);
-      const revenue = receipts.reduce((s, r) => s + (r.amount || 0), 0); const expense = expenses.reduce((s, e) => s + (e.amount || 0), 0);
-      const netProfit = revenue - expense; const tithe = netProfit > 0 ? netProfit * 0.10 : 0; const offering = netProfit > 0 ? netProfit * 0.10 : 0;
-      document.getElementById('statClients').textContent = clients.length; document.getElementById('statProformas').textContent = proformas.length; document.getElementById('statInvoices').textContent = invoices.length;
-      document.getElementById('statRevenue').innerHTML = formatMoney(revenue) + ' <small>UGX</small>'; document.getElementById('statExpense').innerHTML = formatMoney(expense) + ' <small>UGX</small>';
-      document.getElementById('statNetProfit').innerHTML = formatMoney(netProfit) + ' <small>UGX</small>'; document.getElementById('statTithe').innerHTML = formatMoney(tithe) + ' <small>UGX</small>'; document.getElementById('statOffering').innerHTML = formatMoney(offering) + ' <small>UGX</small>';
+      const clients = DB.clients(currentCompany); 
+      const proformas = DB.proformas(currentCompany); 
+      const invoices = DB.invoices(currentCompany); 
+      const receipts = DB.receipts(currentCompany); 
+      const expenses = DB.expenses(currentCompany);
+      
+      const revenue = receipts.reduce((s, r) => s + (r.amount || 0), 0); 
+      const expense = expenses.reduce((s, e) => s + (e.amount || 0), 0);
+      const netProfit = revenue - expense; 
+      const tithe = netProfit > 0 ? netProfit * 0.10 : 0; 
+      const offering = netProfit > 0 ? netProfit * 0.10 : 0;
+      
+      document.getElementById('statClients').textContent = clients.length; 
+      document.getElementById('statProformas').textContent = proformas.length; 
+      document.getElementById('statInvoices').textContent = invoices.length;
+      document.getElementById('statRevenue').innerHTML = formatMoney(revenue) + ' <small>UGX</small>'; 
+      document.getElementById('statExpense').innerHTML = formatMoney(expense) + ' <small>UGX</small>';
+      document.getElementById('statNetProfit').innerHTML = formatMoney(netProfit) + ' <small>UGX</small>'; 
+      document.getElementById('statTithe').innerHTML = formatMoney(tithe) + ' <small>UGX</small>'; 
+      document.getElementById('statOffering').innerHTML = formatMoney(offering) + ' <small>UGX</small>';
+      
       const recentPf = proformas.slice(-3).reverse();
       document.getElementById('dashRecentProformas').innerHTML = recentPf.length ? recentPf.map(p => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-weight:500;"><span>${p.ref||'PF-'+p.id} · ${getClientName(currentCompany, p.clientId)}</span><span class="fw-600">${formatMoney(p.grandTotal||0)}</span></div>`).join('') : 'No proformas yet.';
+      
       const recentInv = invoices.slice(-3).reverse();
       document.getElementById('dashRecentInvoices').innerHTML = recentInv.length ? recentInv.map(p => `<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-weight:500;"><span>${p.ref||'I-'+p.id} · ${getClientName(currentCompany, p.clientId)}</span><span class="fw-600">${formatMoney(p.grandTotal||0)}</span></div>`).join('') : 'No invoices yet.';
     }
 
     function refreshReports() {
+      document.getElementById('reportCompanyName').textContent = currentCompany === 'islemedia' ? 'ISLE MEDIA' : 'ISLE POINT LTD';
+      
       const receipts = DB.receipts(currentCompany); const expenses = DB.expenses(currentCompany);
       const revenue = receipts.reduce((s, r) => s + (r.amount || 0), 0); const expense = expenses.reduce((s, e) => s + (e.amount || 0), 0);
       const netProfit = revenue - expense; const tithe = netProfit > 0 ? netProfit * 0.10 : 0; const offering = netProfit > 0 ? netProfit * 0.10 : 0; const finalNet = netProfit - tithe - offering;
-      document.getElementById('rptRevenue').innerHTML = formatMoney(revenue) + ' <small>UGX</small>'; document.getElementById('rptExpense').innerHTML = formatMoney(expense) + ' <small>UGX</small>';
-      document.getElementById('rptNetProfit').innerHTML = formatMoney(netProfit) + ' <small>UGX</small>'; document.getElementById('rptTithe').innerHTML = formatMoney(tithe) + ' <small>UGX</small>';
-      document.getElementById('rptOffering').innerHTML = formatMoney(offering) + ' <small>UGX</small>'; document.getElementById('rptFinalNet').innerHTML = formatMoney(finalNet) + ' <small>UGX</small>';
+      
+      document.getElementById('rptRevenue').innerHTML = formatMoney(revenue) + ' <small>UGX</small>'; 
+      document.getElementById('rptExpense').innerHTML = formatMoney(expense) + ' <small>UGX</small>';
+      document.getElementById('rptNetProfit').innerHTML = formatMoney(netProfit) + ' <small>UGX</small>'; 
+      document.getElementById('rptTithe').innerHTML = formatMoney(tithe) + ' <small>UGX</small>';
+      document.getElementById('rptOffering').innerHTML = formatMoney(offering) + ' <small>UGX</small>'; 
+      document.getElementById('rptFinalNet').innerHTML = formatMoney(finalNet) + ' <small>UGX</small>';
+      
       const all = [];
       receipts.forEach(r => all.push({ date: r.date, type: 'Receipt', ref: r.ref, client: getClientName(currentCompany, r.clientId), amount: r.amount, category: 'Income', company: currentCompany }));
       expenses.forEach(e => all.push({ date: e.date, type: 'Expense', ref: e.id, client: e.vendor || '-', amount: -e.amount, category: e.category || 'Other', company: currentCompany }));
       all.sort((a, b) => (b.date || '').localeCompare(a.date || ''));
+      
       document.getElementById('rptTransactions').innerHTML = all.length ? `
         <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr;font-weight:600;font-size:0.7rem;color:var(--text-muted);padding:10px 0;border-bottom:1px solid var(--border);"><span>Date</span><span>Type</span><span>Ref / Client</span><span>Category</span><span>Company</span><span style="text-align:right;">Amount</span></div>
         ${all.map(t => `<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr 1fr;padding:8px 0;border-bottom:1px solid var(--border);font-size:0.8rem;font-weight:500;"><span>${formatDate(t.date)}</span><span><span class="tag ${t.type==='Receipt'?'tag-paid':'tag-pending'}">${t.type}</span></span><span>${t.ref} · ${t.client}</span><span>${t.category}</span><span>${t.company||'-'}</span><span style="text-align:right;font-weight:${t.amount<0?'400':'600'};color:${t.amount<0?'#e74c3c':'var(--text)'};">${formatMoney(t.amount)}</span></div>`).join('')}
@@ -2421,12 +2300,81 @@
     }
 
     // ================================================================
+    //  AUTO-SYNC TO GITHUB (Requires User Setup)
+    // ================================================================
+    // NOTE: To enable auto-sync, you must provide a GitHub Personal Access Token (PAT).
+    // Store it securely in localStorage (e.g., githubToken). 
+    // The system will then push the updated index.html to your repo.
+    async function syncToGitHub() {
+      const token = localStorage.getItem('github_token');
+      if (!token) {
+        console.log('GitHub sync disabled: No token found.');
+        return;
+      }
+      
+      const repo = 'kabinijuguna/sylvia-app'; // Your repo
+      const path = 'index.html';
+      const url = `https://api.github.com/repos/${repo}/contents/${path}`;
+      
+      try {
+        // 1. Get current file SHA
+        const getRes = await fetch(url, { headers: { Authorization: `token ${token}` } });
+        if (!getRes.ok) throw new Error('Failed to fetch repo info');
+        const fileData = await getRes.json();
+        const sha = fileData.sha;
+
+        // 2. Prepare content (Base64 encode the current HTML)
+        const htmlContent = document.documentElement.outerHTML;
+        const base64Content = btoa(unescape(encodeURIComponent(htmlContent)));
+
+        // 3. Commit update
+        const putRes = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            Authorization: `token ${token}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            message: 'Auto-sync from Sylvia App',
+            content: base64Content,
+            sha: sha
+          })
+        });
+
+        if (putRes.ok) {
+          console.log('✅ Successfully synced to GitHub!');
+          addSylviaMessage('☁️ System automatically backed up to GitHub.');
+        } else {
+          console.warn('GitHub sync failed');
+        }
+      } catch (e) {
+        console.warn('GitHub Sync Error:', e);
+      }
+    }
+
+    // Trigger sync on data changes (debounced)
+    let syncTimeout;
+    function triggerSync() {
+      clearTimeout(syncTimeout);
+      syncTimeout = setTimeout(syncToGitHub, 5000); // Sync 5 seconds after last change
+    }
+
+    // Override DB.set to trigger sync
+    const originalSet = DB.set.bind(DB);
+    DB.set = function(company, key, val) {
+      originalSet(company, key, val);
+      triggerSync();
+    };
+
+    // ================================================================
     //  INIT
     // ================================================================
     const initialCompany = DB.currentCompany();
     switchCompany(initialCompany);
 
-    renderAllTables(); refreshReports(); renderTrainingCards();
+    renderAllTables(); 
+    refreshReports(); 
+    renderTrainingCards();
 
     document.querySelector('[data-page="dashboard"]')?.addEventListener('click', function() { setTimeout(refreshDashboard, 50); });
     document.querySelector('[data-page="reports"]')?.addEventListener('click', function() { setTimeout(refreshReports, 50); });
@@ -2435,13 +2383,13 @@
     document.querySelectorAll('select[id$="currency"]').forEach(sel => { sel.value = DB.currency(); });
 
     addSylviaMessage('👋 Hi! I\'m Sylvia. Say my name to start voice commands.');
-    console.log('🧠 Sylvia AI · v8.0 · Learning robot, web search, and app modification enabled.');
+    console.log('🧠 Sylvia AI · v9.0 · Parent/Child Docs, Item Catalog, PDF, AI Advisor, Auto-Sync enabled.');
 
     setTimeout(() => {
       if (window.speechSynthesis) {
         const voices = speechSynthesis.getVoices();
         if (voices.length) {
-          const msg = 'Authentification Successful! Welcome back Mr. Njuguna to the Portal. Your System is ready. I have also learned new capabilities: I can search the web for answers and modify the app when you ask. Try the robot button at the bottom right!';
+          const msg = 'Authentification Successful! Welcome back Mr. Njuguna to the Portal. Your System is ready. I am now fully integrated with your financial data.';
           speakText(msg);
           addSylviaMessage('🤖 ' + msg);
         }
