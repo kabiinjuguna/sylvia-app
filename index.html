@@ -530,7 +530,7 @@
       <div class="stat-card" style="min-height:auto; margin-bottom: 20px; border-color: rgba(1,167,157,0.3);">
         <div class="label" style="color: var(--accent);"><i class="fas fa-cloud-upload-alt"></i> GitHub Multi-Device Sync Setup</div>
         <p style="font-size:0.75rem; color:var(--text-muted); margin-top: 6px; margin-bottom: 10px;">
-          Paste your GitHub Personal Access Token (PAT) below. Every change (clients, invoices, expenses, settings) will auto-push to <code>sylvia_data.json</code> in your repo. All your other devices will auto-pull within 30 seconds.
+          Paste your GitHub Personal Access Token (PAT) below. Every change (clients, invoices, expenses, settings) will auto-push to your Gist. All your other devices will auto-pull within 30 seconds.
         </p>
         
         <div style="display:flex; gap: 12px; align-items: center; flex-wrap: wrap;">
@@ -796,13 +796,10 @@
     })();
 
     // ================================================================
-    //  GITHUB MULTI-DEVICE SYNC (DATA JSON)
+    //  GITHUB GIST SYNC (SIMPLE & RELIABLE)
     // ================================================================
     const GITHUB_CONFIG = {
-      owner: 'kabinijuguna',
-      repo: 'sylvia-app',
-      dataFile: 'sylvia_data.json',
-      branch: 'main'
+      gistId: ec0cbf41146e8b132fbc6a48c60b5c59, // <--- PASTE YOUR ID HERE
     };
     let syncInProgress = false;
     let pushTimeout = null;
@@ -826,107 +823,78 @@
     async function pushToGitHub(force) {
       const token = localStorage.getItem('github_token');
       if (!token) return false;
+      if (!GITHUB_CONFIG.gistId || GITHUB_CONFIG.gistId === 'PASTE_YOUR_GIST_ID_HERE') {
+        showToast('Please enter your Gist ID in the code', 'error');
+        return false;
+      }
       if (syncInProgress && !force) return false;
       
       syncInProgress = true;
       setSyncIndicator('syncing');
 
-      const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}`;
+      const url = `https://api.github.com/gists/${GITHUB_CONFIG.gistId}`;
       
-      // We try up to 3 times if there is a version conflict
-      let attempts = 0;
-      while (attempts < 3) {
-        try {
-          // 1. Get the absolute latest SHA from GitHub
-          let sha = null;
-          const getRes = await fetch(url + '?ref=' + GITHUB_CONFIG.branch + '&t=' + Date.now(), { 
-            headers: getGithubHeaders(token) 
-          });
-          if (getRes.ok) {
-            const fileData = await getRes.json();
-            sha = fileData.sha;
-          }
+      try {
+        const data = {
+          __version: 1,
+          __timestamp: new Date().toISOString(),
+          __device: navigator.userAgent.slice(0, 80),
+          data: collectAllLocalData()
+        };
 
-          // 2. Build payload
-          const data = {
-            __version: 1,
-            __timestamp: new Date().toISOString(),
-            __device: navigator.userAgent.slice(0, 80),
-            data: collectAllLocalData()
-          };
-          const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
-
-          // 3. PUT file
-          const body = {
-            message: `Auto-sync from Sylvia App (${new Date().toISOString().slice(0,16).replace('T',' ')})`,
-            content: content,
-            branch: GITHUB_CONFIG.branch
-          };
-          if (sha) body.sha = sha;
-
-          const putRes = await fetch(url, {
-            method: 'PUT',
-            headers: { ...getGithubHeaders(token), 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
-          });
-
-          if (putRes.ok) {
-            localStorage.setItem('sylvia_last_push', new Date().toISOString());
-            updateSyncStatusText('Pushed');
-            setSyncIndicator('ok');
-            syncInProgress = false;
-            return true;
-          } else {
-            const err = await putRes.json();
-            
-            // If it's a 409 Conflict or 422, wait 1 second and try again!
-            if (putRes.status === 409 || putRes.status === 422) {
-              console.warn(`Sync conflict detected (attempt ${attempts + 1}). Retrying...`);
-              attempts++;
-              await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 sec
-              continue; // Try again
-            } else {
-              console.warn('Push failed:', err);
-              setSyncIndicator('error');
-              syncInProgress = false;
-              return false;
+        const body = {
+          description: `Sylvia App Data Sync (${new Date().toLocaleString()})`,
+          files: {
+            'sylvia_data.json': {
+              content: JSON.stringify(data, null, 2)
             }
           }
-        } catch(e) {
-          console.warn('Push error:', e);
+        };
+
+        const putRes = await fetch(url, {
+          method: 'PATCH',
+          headers: { ...getGithubHeaders(token), 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+
+        if (putRes.ok) {
+          localStorage.setItem('sylvia_last_push', new Date().toISOString());
+          updateSyncStatusText('Pushed');
+          setSyncIndicator('ok');
+          syncInProgress = false;
+          return true;
+        } else {
+          const err = await putRes.json();
+          console.error('Push failed:', err);
           setSyncIndicator('error');
           syncInProgress = false;
           return false;
         }
+      } catch(e) {
+        console.error('Push error:', e);
+        setSyncIndicator('error');
+        syncInProgress = false;
+        return false;
       }
-      
-      // If we exhaust all retries
-      console.warn('Sync failed after multiple conflict retries.');
-      setSyncIndicator('error');
-      syncInProgress = false;
-      return false;
     }
 
     async function pullFromGitHub() {
       const token = localStorage.getItem('github_token');
-      if (!token) return false;
+      if (!token || !GITHUB_CONFIG.gistId || GITHUB_CONFIG.gistId === 'PASTE_YOUR_GIST_ID_HERE') return false;
 
-      const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}?ref=${GITHUB_CONFIG.branch}`;
+      const url = `https://api.github.com/gists/${GITHUB_CONFIG.gistId}`;
       try {
         const res = await fetch(url, { headers: getGithubHeaders(token) });
         if (!res.ok) return false;
-        const fileData = await res.json();
-        const remoteSha = fileData.sha;
-        const localSha = localStorage.getItem('sylvia_last_pull_sha');
+        const gistData = await res.json();
+        
+        const file = gistData.files['sylvia_data.json'];
+        if (!file) return false;
 
-        if (remoteSha === localSha) return false; // already current
-
-        // Decode base64 JSON
-        const decoded = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, '')))));
+        const decoded = JSON.parse(file.content);
         const remoteTimestamp = decoded.__timestamp;
         const lastPush = localStorage.getItem('sylvia_last_push');
 
-        // Conflict: if we pushed after remote was written, skip (avoid overwriting local)
         if (lastPush && remoteTimestamp < lastPush) return false;
 
         // Apply all keys to localStorage
@@ -936,7 +904,6 @@
           }
         });
 
-        localStorage.setItem('sylvia_last_pull_sha', remoteSha);
         localStorage.setItem('sylvia_last_pull_time', new Date().toISOString());
 
         // Refresh UI with new data
@@ -976,7 +943,7 @@
       showToast('Pushing all data…');
       const ok = await pushToGitHub(true);
       if (ok) { playSuccessSound(); showToast('✅ Data pushed to GitHub'); }
-      else showToast('Push failed — check token', 'error');
+      else showToast('Push failed — check token & Gist ID', 'error');
     }
 
     async function forcePull() {
