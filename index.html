@@ -5,13 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.5, user-scalable=yes" />
   <title>Sylvia · Futuristic Financial Suite</title>
 
-  <!-- PWA / iOS meta -->
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" id="themeColor" content="#0b1a33" />
   <link rel="manifest" href='data:application/manifest+json,{"name":"Sylvia","short_name":"Sylvia","start_url":".","display":"standalone","background_color":"#0b1a33","theme_color":"#0b1a33","icons":[{"src":"data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23f5b342%22/><text x=%2250%22 y=%2265%22 font-size=%2245%22 text-anchor=%22middle%22 fill=%22%230b1a33%22 font-weight=%22bold%22>S</text></svg>","sizes":"any","type":"image/svg+xml"}]}' />
 
-  <!-- Fonts & Icons & PDF Library -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800;14..32,900&display=swap" rel="stylesheet" />
@@ -54,14 +52,12 @@
                        radial-gradient(circle at 90% 80%, rgba(245,179,66,0.04) 0%, transparent 50%);
     }
 
-    /* Animated background waves */
     .bg-waves { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
     .bg-waves svg { position:absolute; bottom:0; width:100%; height:40%; opacity:0.08; animation:waveMove 20s linear infinite; }
     @keyframes waveMove { 0% { transform:translateX(0); } 100% { transform:translateX(-50%); } }
     .bg-lines { position:fixed; inset:0; z-index:0; pointer-events:none; background:linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px); background-size:40px 100%; animation:lineScroll 15s linear infinite; }
     @keyframes lineScroll { 0% { transform:translateX(0); } 100% { transform:translateX(40px); } }
 
-    /* ===== SIDEBAR ===== */
     .sidebar {
       width:280px; background:linear-gradient(135deg,#0b1a33 0%,#1a2a4a 100%); backdrop-filter:blur(20px);
       display:flex; flex-direction:column; padding:24px 0 16px 0; position:fixed; top:0; left:0; bottom:0; z-index:100;
@@ -101,7 +97,6 @@
     }
     .sidebar-footer { padding:16px 24px 0; border-top:1px solid rgba(255,255,255,0.04); font-size:0.6rem; opacity:0.3; text-align:center; color:#8895aa; }
 
-    /* ===== MAIN ===== */
     .main { margin-left:0; flex:1; padding:20px 16px 40px; min-height:100vh; width:100%; position:relative; z-index:1; }
     .topbar { display:flex; justify-content:space-between; align-items:center; margin-bottom:28px; flex-wrap:wrap; gap:12px; padding:0 4px; }
     .topbar .left { display:flex; align-items:center; gap:16px; }
@@ -122,6 +117,7 @@
     }
     .topbar-actions .voice-status .dot { display:inline-block; width:8px; height:8px; border-radius:50%; background:#2ecc71; box-shadow:0 0 10px #2ecc71; }
     .topbar-actions .voice-status .dot.inactive { background:var(--text-muted); box-shadow:none; }
+    .topbar-actions .voice-status .dot.syncing { background:#f5b342; box-shadow:0 0 10px #f5b342; animation:pulseGlow 1s infinite; }
     #sidebarToggle, #themeToggle {
       background:var(--bg-card); border:1px solid var(--border); border-radius:50px; padding:0 18px; min-height:48px;
       font-size:1.2rem; color:var(--text); display:flex; align-items:center; transition:0.2s; cursor:pointer; backdrop-filter:blur(10px);
@@ -203,7 +199,6 @@
     .voice-float .text { font-weight:500; }
     .voice-float .close-voice { background:none; border:none; color:var(--text-muted); font-size:1.2rem; padding:0 4px; min-height:36px; cursor:pointer; }
 
-    /* ===== AI ROBOT CHAT ===== */
     .ai-robot-btn { position:fixed; bottom:100px; right:30px; width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,#f5b342,#d4880f); border:none; cursor:pointer; box-shadow:0 8px 30px rgba(245,179,66,0.4); z-index:250; display:flex; align-items:center; justify-content:center; font-size:1.8rem; color:#0a0e1a; transition:all 0.3s; animation:robotPulse 2s ease-in-out infinite; }
     .ai-robot-btn:hover { transform:scale(1.1); box-shadow:0 12px 40px rgba(245,179,66,0.6); }
     @keyframes robotPulse { 0%,100% { box-shadow:0 8px 30px rgba(245,179,66,0.4); } 50% { box-shadow:0 8px 50px rgba(245,179,66,0.7); } }
@@ -225,9 +220,6 @@
     .ai-robot-panel .robot-input-area button:hover { transform:scale(1.05); }
     .ai-robot-panel .robot-input-area button:disabled { opacity:0.4; cursor:not-allowed; }
 
-    /* ================================================================
-       A4 DOCUMENT – UPDATED LAYOUT
-    ================================================================ */
     .doc-preview-wrapper { background:#e8e8e8; padding:20px; border-radius:var(--radius); box-shadow:0 20px 60px rgba(0,0,0,0.12); max-width:900px; margin:0 auto; }
     .doc-a4 { width:210mm; min-height:297mm; margin:0 auto; background:#fff; color:#000; font-family:'Franklin Gothic Medium','Arial Narrow',Arial,sans-serif; font-size:11pt; line-height:1.3; padding:0; box-shadow:0 4px 20px rgba(0,0,0,0.08); position:relative; overflow:hidden; }
     .doc-a4 .doc-header { height:9cm; background:#b62025; position:relative; overflow:hidden; padding:0; }
@@ -330,7 +322,6 @@
     .training-card .card-actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
     .training-card .card-actions .btn { min-height:36px; padding:6px 18px; font-size:0.75rem; }
 
-    /* PDF Preview Overlay */
     #pdfPreviewOverlay {
       position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px;
     }
@@ -340,7 +331,6 @@
 </head>
 <body>
 
-  <!-- Animated Background -->
   <div class="bg-lines"></div>
   <div class="bg-waves">
     <svg viewBox="0 0 1440 320" xmlns="http://www.w3.org/2000/svg">
@@ -348,13 +338,12 @@
     </svg>
   </div>
 
-  <!-- ===== SIDEBAR ===== -->
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-brand">
       <div class="logo-wrap" id="logoDisplay"><span>IM</span></div>
       <div>
         <h1>Sylvia<span>.</span></h1>
-        <small>ISLE MEDIA · v9.0</small>
+        <small>ISLE MEDIA · v9.1</small>
       </div>
     </div>
 
@@ -383,11 +372,10 @@
       <a href="#" data-page="settings"><i class="fas fa-cog"></i> Settings</a>
     </nav>
     <div class="sidebar-footer">
-      <span class="training-badge"><i class="fas fa-microchip"></i> Sylvia AI · v9.0</span>
+      <span class="training-badge"><i class="fas fa-microchip"></i> Sylvia AI · v9.1</span>
     </div>
   </aside>
 
-  <!-- ===== MAIN ===== -->
   <main class="main">
 
     <div class="topbar">
@@ -412,7 +400,6 @@
       </div>
     </div>
 
-    <!-- ===== PAGES ===== -->
     <section class="page active" id="page-dashboard">
       <div class="stats-grid" id="dashStats">
         <div class="stat-card"><div class="label">Total Clients</div><div class="value" id="statClients">0</div></div>
@@ -432,7 +419,6 @@
 
     <section class="page" id="page-clients"><div class="page-header"><h3><i class="fas fa-users"></i> Clients</h3><div class="actions"><button class="btn btn-primary" onclick="openClientModal()"><i class="fas fa-plus"></i> Add Client</button></div></div><div class="table-wrap"><table><thead><tr><th>Name</th><th>Tel</th><th>Email</th><th>City</th><th style="text-align:right;">Actions</th></tr></thead><tbody id="clientTableBody"></tbody></table></div></section>
 
-    <!-- ===== ITEM CATALOG ===== -->
     <section class="page" id="page-items">
       <div class="page-header">
         <h3><i class="fas fa-box-open"></i> Item Catalog</h3>
@@ -448,7 +434,6 @@
       </div>
     </section>
 
-    <!-- ===== PROFORMA ===== -->
     <section class="page" id="page-proforma">
       <div class="page-header">
         <h3><i class="fas fa-file-invoice"></i> Proforma Invoices (Parent)</h3>
@@ -457,7 +442,6 @@
         </div>
       </div>
       
-      <!-- Status Categorization Tabs -->
       <div style="display:flex;gap:10px;margin-bottom:20px;">
         <button class="btn btn-outline btn-sm active-tab" onclick="filterProforma('pending')">Pending</button>
         <button class="btn btn-outline btn-sm" onclick="filterProforma('paid')">Paid</button>
@@ -473,7 +457,6 @@
       </div>
     </section>
 
-    <!-- ===== INVOICE ===== -->
     <section class="page" id="page-invoice">
       <div class="page-header">
         <h3><i class="fas fa-file-invoice-dollar"></i> Invoices (Child)</h3>
@@ -489,7 +472,6 @@
       </div>
     </section>
 
-    <!-- ===== RECEIPT ===== -->
     <section class="page" id="page-receipt">
       <div class="page-header">
         <h3><i class="fas fa-receipt"></i> Receipts (Child)</h3>
@@ -547,15 +529,20 @@
 
       <!-- GITHUB AUTO-SYNC SETUP -->
       <div class="stat-card" style="min-height:auto; margin-bottom: 20px; border-color: rgba(1,167,157,0.3);">
-        <div class="label" style="color: var(--accent);"><i class="fas fa-cloud-upload-alt"></i> GitHub Auto-Sync Setup</div>
-        <p style="font-size:0.75rem; color:var(--text-muted); margin-top: 6px; margin-bottom: 10px;">Paste your GitHub Personal Access Token (PAT) below to allow the app to save changes automatically to your GitHub repository.</p>
+        <div class="label" style="color: var(--accent);"><i class="fas fa-cloud-upload-alt"></i> GitHub Multi-Device Sync Setup</div>
+        <p style="font-size:0.75rem; color:var(--text-muted); margin-top: 6px; margin-bottom: 10px;">
+          Paste your GitHub Personal Access Token (PAT) below. Every change (clients, invoices, expenses, settings) will auto-push to <code>sylvia_data.json</code> in your repo. All your other devices will auto-pull within 30 seconds.
+        </p>
         
         <div style="display:flex; gap: 12px; align-items: center; flex-wrap: wrap;">
           <input type="password" id="githubTokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="flex: 1; min-width: 200px; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); font-family: monospace;" />
           <button class="btn btn-primary" onclick="saveGithubToken()"><i class="fas fa-save"></i> Save Token</button>
+          <button class="btn btn-gold" onclick="forcePull()"><i class="fas fa-download"></i> Force Pull</button>
+          <button class="btn btn-success" onclick="forcePush()"><i class="fas fa-upload"></i> Force Push</button>
         </div>
         
         <p id="githubTokenStatus" style="font-size:0.75rem; margin-top: 10px; font-weight: 600;">Status: Checking...</p>
+        <p id="syncStatus" style="font-size:0.7rem; margin-top: 4px; color: var(--text-muted);">Last sync: never</p>
       </div>
       
       <div class="stat-card" style="min-height:auto; margin-bottom: 20px;">
@@ -635,7 +622,6 @@
 
   </main>
 
-  <!-- ===== AI ROBOT BUTTON & PANEL ===== -->
   <button class="ai-robot-btn" id="aiRobotBtn" onclick="toggleAIRobot()" title="Ask Sylvia AI">
     🤖
   </button>
@@ -646,7 +632,7 @@
       <button class="robot-close" onclick="toggleAIRobot()">&times;</button>
     </div>
     <div class="robot-messages" id="robotMessages">
-      <div class="robot-msg bot">Hello Mr. Njuguna! I am fully connected to your business data. I can analyze your reports, search the web, and modify the app. Try asking me: "What are my total pending proformas?" or "Create a client named Acme Corp".</div>
+      <div class="robot-msg bot">Hello Mr. Njuguna! I am fully connected to your business data. I can analyze your reports, search the web, and modify the app.</div>
     </div>
     <div class="robot-input-area">
       <input type="text" id="robotInput" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter')sendRobotMessage()" />
@@ -654,7 +640,6 @@
     </div>
   </div>
 
-  <!-- ===== PDF PREVIEW OVERLAY ===== -->
   <div id="pdfPreviewOverlay">
     <img id="pdfPreviewImage" src="" alt="PDF Preview" />
     <div style="display:flex; gap:16px;">
@@ -663,7 +648,6 @@
     </div>
   </div>
 
-  <!-- ===== MODAL ===== -->
   <div class="modal-overlay" id="modalOverlay">
     <div class="modal" id="modalContent">
       <div class="modal-header"><h3 id="modalTitle">Modal</h3><button class="modal-close" onclick="closeModal()">&times;</button></div>
@@ -679,7 +663,10 @@
       get(company, key, def) {
         try { const d = localStorage.getItem('sylvia_' + company + '_' + key); return d ? JSON.parse(d) : def; } catch(e) { return def; }
       },
-      set(company, key, val) { localStorage.setItem('sylvia_' + company + '_' + key, JSON.stringify(val)); },
+      set(company, key, val) {
+        localStorage.setItem('sylvia_' + company + '_' + key, JSON.stringify(val));
+        triggerSync();
+      },
       clients(company) { return this.get(company, 'clients', []); },
       setClients(company, c) { this.set(company, 'clients', c); },
       items(company) { return this.get(company, 'items', []); },
@@ -757,6 +744,243 @@
 
     let currentCompany = DB.currentCompany();
     let currentProformaFilter = 'pending';
+
+    // ================================================================
+    //  DOWNLOAD SOUND & TOAST
+    // ================================================================
+    let audioCtx = null;
+    function playSuccessSound() {
+      try {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const now = audioCtx.currentTime;
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, now);
+        osc.frequency.setValueAtTime(1320, now + 0.12);
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.25, now + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.35);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start(now);
+        osc.stop(now + 0.4);
+      } catch(e) { console.warn('Sound failed', e); }
+    }
+
+    function showToast(message, type) {
+      const toast = document.createElement('div');
+      toast.style.cssText = `
+        position:fixed; top:24px; right:24px; z-index:99999;
+        background:${type === 'error' ? '#e74c3c' : 'linear-gradient(135deg,#f5b342,#d4880f)'};
+        color:${type === 'error' ? '#fff' : '#0a0e1a'};
+        padding:14px 22px; border-radius:14px; font-weight:700; font-size:0.9rem;
+        box-shadow:0 8px 30px rgba(0,0,0,0.25); display:flex; align-items:center; gap:10px;
+        animation:toastIn 0.35s cubic-bezier(0.4,0,0.2,1); pointer-events:none; max-width:90vw;
+      `;
+      toast.innerHTML = `<i class="fas ${type === 'error' ? 'fa-exclamation-triangle' : 'fa-check-circle'}"></i> ${message}`;
+      document.body.appendChild(toast);
+      setTimeout(() => {
+        toast.style.animation = 'toastOut 0.35s forwards';
+        setTimeout(() => toast.remove(), 400);
+      }, 2600);
+    }
+
+    (function() {
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes toastIn { from { transform: translateY(-30px); opacity:0; } to { transform: translateY(0); opacity:1; } }
+        @keyframes toastOut { to { transform: translateY(-30px); opacity:0; } }
+      `;
+      document.head.appendChild(style);
+    })();
+
+    // ================================================================
+    //  GITHUB MULTI-DEVICE SYNC (data JSON, not HTML)
+    // ================================================================
+    const GITHUB_CONFIG = {
+      owner: 'kabinijuguna',
+      repo: 'sylvia-app',
+      dataFile: 'sylvia_data.json',
+      branch: 'main'
+    };
+    let syncInProgress = false;
+    let pushTimeout = null;
+
+    function getGithubHeaders(token) {
+      return { 'Authorization': `token ${token}`, 'Accept': 'application/vnd.github+json' };
+    }
+
+    function collectAllLocalData() {
+      const dump = {};
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && key.startsWith('sylvia_')) {
+          try { dump[key] = JSON.parse(localStorage.getItem(key)); }
+          catch(e) { dump[key] = localStorage.getItem(key); }
+        }
+      }
+      return dump;
+    }
+
+    async function pushToGitHub(force) {
+      const token = localStorage.getItem('github_token');
+      if (!token) return false;
+      if (syncInProgress && !force) return false;
+      syncInProgress = true;
+      setSyncIndicator('syncing');
+
+      const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}`;
+      try {
+        // 1. Get existing sha (if file exists)
+        let sha = null;
+        const getRes = await fetch(url + '?ref=' + GITHUB_CONFIG.branch, { headers: getGithubHeaders(token) });
+        if (getRes.ok) {
+          const fileData = await getRes.json();
+          sha = fileData.sha;
+        }
+
+        // 2. Build payload
+        const data = {
+          __version: 1,
+          __timestamp: new Date().toISOString(),
+          __device: navigator.userAgent.slice(0, 80),
+          data: collectAllLocalData()
+        };
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+
+        // 3. PUT file
+        const body = {
+          message: `Auto-sync from Sylvia App (${new Date().toISOString().slice(0,16).replace('T',' ')})`,
+          content: content,
+          branch: GITHUB_CONFIG.branch
+        };
+        if (sha) body.sha = sha;
+
+        const putRes = await fetch(url, {
+          method: 'PUT',
+          headers: { ...getGithubHeaders(token), 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        });
+
+        if (putRes.ok) {
+          localStorage.setItem('sylvia_last_push', new Date().toISOString());
+          updateSyncStatusText('Pushed');
+          setSyncIndicator('ok');
+          return true;
+        } else {
+          const err = await putRes.text();
+          console.warn('Push failed:', err);
+          setSyncIndicator('error');
+          return false;
+        }
+      } catch(e) {
+        console.warn('Push error:', e);
+        setSyncIndicator('error');
+        return false;
+      } finally {
+        syncInProgress = false;
+      }
+    }
+
+    async function pullFromGitHub() {
+      const token = localStorage.getItem('github_token');
+      if (!token) return false;
+
+      const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}?ref=${GITHUB_CONFIG.branch}`;
+      try {
+        const res = await fetch(url, { headers: getGithubHeaders(token) });
+        if (!res.ok) return false;
+        const fileData = await res.json();
+        const remoteSha = fileData.sha;
+        const localSha = localStorage.getItem('sylvia_last_pull_sha');
+
+        if (remoteSha === localSha) return false; // already current
+
+        // Decode base64 JSON
+        const decoded = JSON.parse(decodeURIComponent(escape(atob(fileData.content.replace(/\s/g, '')))));
+        const remoteTimestamp = decoded.__timestamp;
+        const lastPush = localStorage.getItem('sylvia_last_push');
+
+        // Conflict: if we pushed after remote was written, skip (avoid overwriting local)
+        if (lastPush && remoteTimestamp < lastPush) return false;
+
+        // Apply all keys to localStorage
+        Object.keys(decoded.data || {}).forEach(k => {
+          if (k.startsWith('sylvia_')) {
+            try { localStorage.setItem(k, JSON.stringify(decoded.data[k])); } catch(e) {}
+          }
+        });
+
+        localStorage.setItem('sylvia_last_pull_sha', remoteSha);
+        localStorage.setItem('sylvia_last_pull_time', new Date().toISOString());
+
+        // Refresh UI with new data
+        renderAllTables();
+        refreshDashboard();
+        refreshReports();
+        renderTrainingCards();
+        updateSyncStatusText('Pulled ' + new Date(remoteTimestamp).toLocaleTimeString());
+        showToast('🔄 Synced from other device');
+        return true;
+      } catch(e) {
+        console.warn('Pull error:', e);
+        return false;
+      }
+    }
+
+    function triggerSync() {
+      if (pushTimeout) clearTimeout(pushTimeout);
+      pushTimeout = setTimeout(() => pushToGitHub(false), 3000);
+    }
+
+    function setSyncIndicator(state) {
+      const dot = document.getElementById('statusDot');
+      const txt = document.getElementById('statusText');
+      if (!dot) return;
+      if (state === 'syncing') { dot.className = 'dot syncing'; if (txt) txt.textContent = 'Syncing...'; }
+      else if (state === 'ok') { dot.className = 'dot'; if (txt) txt.textContent = 'Synced'; setTimeout(() => { if (!_voiceActive && txt) txt.textContent = 'Ready'; }, 2000); }
+      else if (state === 'error') { dot.className = 'dot inactive'; if (txt) txt.textContent = 'Sync error'; }
+    }
+
+    function updateSyncStatusText(msg) {
+      const el = document.getElementById('syncStatus');
+      if (el) el.textContent = 'Last sync: ' + msg + ' (' + new Date().toLocaleTimeString() + ')';
+    }
+
+    async function forcePush() {
+      showToast('Pushing all data…');
+      const ok = await pushToGitHub(true);
+      if (ok) { playSuccessSound(); showToast('✅ Data pushed to GitHub'); }
+      else showToast('Push failed — check token', 'error');
+    }
+
+    async function forcePull() {
+      showToast('Pulling from GitHub…');
+      const ok = await pullFromGitHub();
+      if (ok) { playSuccessSound(); showToast('✅ Data pulled & UI refreshed'); }
+      else showToast('Already up to date (or pull failed)', 'success');
+    }
+
+    // Auto-pull every 30 seconds
+    setInterval(() => {
+      if (document.visibilityState === 'visible' && localStorage.getItem('github_token')) {
+        pullFromGitHub();
+      }
+    }, 30000);
+
+    // Initial pull 4 seconds after load
+    setTimeout(() => {
+      if (localStorage.getItem('github_token')) pullFromGitHub();
+    }, 4000);
+
+    // Pull when tab becomes visible
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible' && localStorage.getItem('github_token')) {
+        pullFromGitHub();
+      }
+    });
 
     // ================================================================
     //  COMPANY SWITCHER, THEME, NAVIGATION
@@ -900,17 +1124,12 @@
     function populateVoices() {
       const voices = speechSynthesis.getVoices();
       if (voices.length === 0) return;
-      
-      // Filter for female English voices (heuristic based on common names)
       const femaleNames = ['Zira', 'Samantha', 'Karen', 'Tessa', 'Victoria', 'Susan', 'Hazel', 'Female'];
       femaleVoices = voices.filter(v => v.lang.startsWith('en') && femaleNames.some(name => v.name.includes(name)));
-      
-      // If less than 5, just grab any English voices to fill up
       if (femaleVoices.length < 5) {
         const otherEn = voices.filter(v => v.lang.startsWith('en') && !femaleVoices.includes(v));
         femaleVoices = femaleVoices.concat(otherEn).slice(0, 5);
       }
-
       const select = document.getElementById('voiceSelect');
       if (select) {
         select.innerHTML = femaleVoices.map((v, i) => `<option value="${v.name}">${v.name} (${v.lang})</option>`).join('');
@@ -921,7 +1140,7 @@
     }
 
     speechSynthesis.onvoiceschanged = populateVoices;
-    setTimeout(populateVoices, 1000); // Fallback
+    setTimeout(populateVoices, 1000);
 
     function testVoice() {
       const select = document.getElementById('voiceSelect');
@@ -933,25 +1152,19 @@
     function speakText(text, callback) {
       if (!window.speechSynthesis) { if(callback) callback(); return; }
       const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = 'en-US'; utterance.rate = 0.95; utterance.pitch = 1.0; // Slightly higher pitch for female
-      
+      utterance.lang = 'en-US'; utterance.rate = 0.95; utterance.pitch = 1.0;
       const savedVoiceName = DB.voiceName();
       const voices = speechSynthesis.getVoices();
       let selectedVoice = voices.find(v => v.name === savedVoiceName);
-      
       if (!selectedVoice) {
-        // Fallback to default African/Female voice if none selected
         selectedVoice = voices.find(v => v.lang.startsWith('en') && (v.name.includes('Zira') || v.name.includes('Samantha')));
       }
-      
       if (selectedVoice) utterance.voice = selectedVoice;
       utterance.onend = function() { if (callback) callback(); };
       speechSynthesis.speak(utterance);
     }
 
-    // ================================================================
-    //  VOICE RECOGNITION
-    // ================================================================
+    // ===== VOICE RECOGNITION =====
     let recognition = null;
     let _voiceActive = false;
     let _voiceTarget = null;
@@ -983,7 +1196,7 @@
       };
       recognition.onerror = function(e) {
         if (e.error === 'not-allowed') { document.getElementById('statusText').textContent = 'Permission denied'; stopVoice(); }
-        else if (e.error === 'no-speech') { /* keep going */ }
+        else if (e.error === 'no-speech') { }
         else { stopVoice(); }
       };
       recognition.onend = function() {
@@ -1058,9 +1271,7 @@
       while (log.children.length > 50) log.removeChild(log.firstChild);
     }
 
-    // ================================================================
-    //  AI ROBOT – LEARNING, ANALYTICS & APP MODIFICATION
-    // ================================================================
+    // ===== AI ROBOT =====
     let robotOpen = false;
     let isRobotThinking = false;
 
@@ -1110,7 +1321,6 @@
       showRobotTyping();
 
       try {
-        // 1. Check for App Modifications
         const modification = detectAppModification(text);
         if (modification) {
           const result = await executeAppModification(modification);
@@ -1121,7 +1331,6 @@
           return;
         }
 
-        // 2. Check for Financial Analytics Queries
         const analytics = checkAnalyticsQuery(text);
         if (analytics) {
           removeRobotTyping();
@@ -1131,7 +1340,6 @@
           return;
         }
 
-        // 3. Check Memory
         const memory = DB.memory();
         for (const entry of memory) {
           if (text.toLowerCase().includes(entry.question.toLowerCase()) || entry.question.toLowerCase().includes(text.toLowerCase())) {
@@ -1143,7 +1351,6 @@
           }
         }
 
-        // 4. Web Search Fallback
         const answer = await searchWeb(text);
         removeRobotTyping();
 
@@ -1170,28 +1377,24 @@
     function checkAnalyticsQuery(text) {
       const lower = text.toLowerCase();
       
-      // Pending Proformas
       if (lower.includes('pending proforma') || lower.includes('pending proformas')) {
         const pending = DB.proformas(currentCompany).filter(p => p.status === 'pending');
         const total = pending.reduce((sum, p) => sum + (p.grandTotal || 0), 0);
         return `You have <strong>${pending.length}</strong> pending proformas with a total value of <strong>${formatMoney(total)}</strong>.`;
       }
       
-      // Total Revenue
       if (lower.includes('total revenue') || lower.includes('how much have i made')) {
         const receipts = DB.receipts(currentCompany);
         const revenue = receipts.reduce((s, r) => s + (r.amount || 0), 0);
         return `Your total revenue for ${currentCompany === 'islemedia' ? 'ISLE MEDIA' : 'ISLE POINT'} is <strong>${formatMoney(revenue)}</strong>.`;
       }
 
-      // Total Expenditure
       if (lower.includes('total expenditure') || lower.includes('total expenses') || lower.includes('how much have i spent')) {
         const expenses = DB.expenses(currentCompany);
         const total = expenses.reduce((s, e) => s + (e.amount || 0), 0);
         return `Your total expenditure for ${currentCompany === 'islemedia' ? 'ISLE MEDIA' : 'ISLE POINT'} is <strong>${formatMoney(total)}</strong>.`;
       }
 
-      // Net Profit
       if (lower.includes('net profit') || lower.includes('profit')) {
         const receipts = DB.receipts(currentCompany);
         const expenses = DB.expenses(currentCompany);
@@ -1206,16 +1409,10 @@
 
     function detectAppModification(text) {
       const lower = text.toLowerCase();
-      
-      // Create Client
       const clientMatch = lower.match(/(?:create|add)\s+(?:a\s+)?client\s+(?:named|called)\s+(.+)/i);
       if (clientMatch) return { type: 'addClient', name: clientMatch[1].trim() };
-      
-      // Create Expense
       const expenseMatch = lower.match(/(?:add|create)\s+(?:an\s+)?expense\s+(?:for|of)\s+([\d,]+)\s+(?:for|on)\s+(.+)/i);
       if (expenseMatch) return { type: 'addExpense', amount: parseFloat(expenseMatch[1].replace(/,/g, '')), description: expenseMatch[2].trim() };
-      
-      // Navigate
       if (lower.includes('go to') || lower.includes('navigate to') || lower.includes('open')) {
         const pages = ['dashboard','clients','items','proforma','invoice','receipt','expenditure','reports','training','settings'];
         for (const p of pages) { if (lower.includes(p)) return { type: 'navigate', page: p }; }
@@ -1258,9 +1455,7 @@
       } catch (e) { return null; }
     }
 
-    // ================================================================
-    //  TRAINING CARDS
-    // ================================================================
+    // ===== TRAINING =====
     function renderTrainingCards() {
       const container = document.getElementById('trainingCardsContainer');
       const training = DB.training();
@@ -1328,9 +1523,7 @@
       DB.setTraining([]); renderTrainingCards(); addSylviaMessage('🧹 All conversations cleared.');
     }
 
-    // ================================================================
-    //  COMMAND PROCESSOR & TRAINING
-    // ================================================================
+    // ===== COMMAND PROCESSOR =====
     async function processCommand(text) {
       const lower = text.toLowerCase();
       const wake = _wakeWord.toLowerCase();
@@ -1482,7 +1675,6 @@
       renderClients(); renderItems(); renderProformas(); renderInvoices(); renderReceipts(); renderExpenses(); refreshDashboard();
     }
 
-    // ----- CLIENTS -----
     function renderClients() {
       const tbody = document.getElementById('clientTableBody');
       const clients = DB.clients(currentCompany);
@@ -1536,7 +1728,6 @@
     function editClient(id) { const c = DB.clients(currentCompany).find(x => x.id === id); if (c) openClientModal(c); }
     function deleteClient(id) { if (!confirm('Delete this client?')) return; DB.setClients(currentCompany, DB.clients(currentCompany).filter(x => x.id !== id)); renderAllTables(); }
 
-    // ----- ITEM CATALOG -----
     function renderItems() {
       const tbody = document.getElementById('itemTableBody');
       const items = DB.items(currentCompany);
@@ -1583,17 +1774,11 @@
     function editItem(id) { const i = DB.items(currentCompany).find(x => x.id === id); if (i) openItemModal(i); }
     function deleteItem(id) { if (!confirm('Delete this item?')) return; DB.setItems(currentCompany, DB.items(currentCompany).filter(x => x.id !== id)); renderAllTables(); }
 
-    // ----- PROFORMA -----
     function renderProformas() {
       const tbody = document.getElementById('proformaTableBody');
       let items = DB.proformas(currentCompany);
-      
-      if (currentProformaFilter !== 'all') {
-        items = items.filter(p => p.status === currentProformaFilter);
-      }
-
+      if (currentProformaFilter !== 'all') { items = items.filter(p => p.status === currentProformaFilter); }
       if (!items.length) { tbody.innerHTML = `<tr><td colspan="6" class="text-center text-muted" style="padding:30px;font-weight:500;">No ${currentProformaFilter !== 'all' ? currentProformaFilter : ''} proformas found.</td></tr>`; return; }
-      
       tbody.innerHTML = items.map(p => `
         <tr>
           <td>${p.ref || 'PF-'+p.id}</td>
@@ -1619,7 +1804,6 @@
     function filterProforma(status) {
       currentProformaFilter = status;
       document.querySelectorAll('#page-proforma .btn-outline').forEach(b => b.classList.remove('active-tab'));
-      // Simple visual toggle for tabs (you can enhance this)
       renderProformas();
     }
 
@@ -1635,7 +1819,6 @@
       const clients = DB.clients(currentCompany);
       const clientOpts = clients.map(c => `<option value="${c.id}" ${c.id==p.clientId?'selected':''}>${c.name}</option>`).join('');
       const catalogItems = DB.items(currentCompany);
-      const itemOpts = catalogItems.map(i => `<option value="${i.id}">${i.name} - ${formatMoney(i.price)}</option>`).join('');
       
       let itemsHtml = p.items.map((it, i) => `
         <tr>
@@ -1732,8 +1915,7 @@
 
     function recalcPf() {
       const tbody = document.getElementById('pfItemsBody'); if (!tbody) return;
-      let subtotal = 0;
-      let vat = 0;
+      let subtotal = 0; let vat = 0;
       for (const row of tbody.children) {
         const qty = parseFloat(row.querySelector('input[type="number"]')?.value) || 0;
         const price = parseFloat(row.querySelectorAll('input[type="number"]')[1]?.value) || 0;
@@ -1777,14 +1959,13 @@
       const data = { id, clientId, date, ref, status: 'pending', items, total, vat, grandTotal, amountInWords, company: currentCompany, currency, createdAt: new Date().toISOString() };
       let list = DB.proformas(currentCompany); const idx = list.findIndex(x => x.id === id); if (idx >= 0) list[idx] = data; else list.push(data);
       DB.setProformas(currentCompany, list); closeModal(); renderAllTables(); addSylviaMessage(`📄 Proforma ${ref} created for ${getClientName(currentCompany, clientId)}`);
-      setTimeout(() => viewProforma(data.id), 500); // Show preview immediately
+      setTimeout(() => viewProforma(data.id), 500);
     }
 
     function viewProforma(id) { const p = DB.proformas(currentCompany).find(x => x.id === id); if (!p) return; openDocumentPreview('Proforma Invoice', p); }
     function printProforma(id) { const p = DB.proformas(currentCompany).find(x => x.id === id); if (!p) return; openDocumentPreview('Proforma Invoice', p, true); }
     function deleteProforma(id) { if (!confirm('Delete this proforma?')) return; DB.setProformas(currentCompany, DB.proformas(currentCompany).filter(x => x.id !== id)); renderAllTables(); }
 
-    // ----- INVOICE (Child of Proforma) -----
     function renderInvoices() {
       const tbody = document.getElementById('invoiceTableBody'); const items = DB.invoices(currentCompany);
       if (!items.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:30px;font-weight:500;">No invoices yet.</td></tr>'; return; }
@@ -1807,7 +1988,6 @@
     function openInvoiceModal(data) {
       const isEdit = !!data;
       const p = data || { id:0, clientId:'', date:today(), items:[{particular:'', qty:1, unitPrice:0, tax:false}], total:0, vat:0, grandTotal:0, status:'pending', ref:'', company:currentCompany };
-      // Simplified modal for direct invoice creation (can be expanded to include catalog like Proforma)
       const clients = DB.clients(currentCompany);
       const clientOpts = clients.map(c => `<option value="${c.id}" ${c.id==p.clientId?'selected':''}>${c.name}</option>`).join('');
       let itemsHtml = p.items.map((it, i) => `
@@ -1923,7 +2103,6 @@
     function printInvoice(id) { const p = DB.invoices(currentCompany).find(x => x.id === id); if (!p) return; openDocumentPreview('Invoice', p, true); }
     function deleteInvoice(id) { if (!confirm('Delete this invoice?')) return; DB.setInvoices(currentCompany, DB.invoices(currentCompany).filter(x => x.id !== id)); renderAllTables(); }
 
-    // ----- RECEIPT (Child of Proforma) -----
     function renderReceipts() {
       const tbody = document.getElementById('receiptTableBody'); const items = DB.receipts(currentCompany);
       if (!items.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:30px;font-weight:500;">No receipts yet.</td></tr>'; return; }
@@ -1992,7 +2171,6 @@
     function printReceipt(id) { const p = DB.receipts(currentCompany).find(x => x.id === id); if (!p) return; openDocumentPreview('Receipt', p, true); }
     function deleteReceipt(id) { if (!confirm('Delete this receipt?')) return; DB.setReceipts(currentCompany, DB.receipts(currentCompany).filter(x => x.id !== id)); renderAllTables(); }
 
-    // ----- EXPENDITURE -----
     function renderExpenses() {
       const tbody = document.getElementById('expenseTableBody'); const items = DB.expenses(currentCompany);
       if (!items.length) { tbody.innerHTML = '<tr><td colspan="6" class="text-center text-muted" style="padding:30px;font-weight:500;">No expenses recorded.</td></tr>'; return; }
@@ -2045,7 +2223,7 @@
     function deleteExpense(id) { if (!confirm('Delete this expense?')) return; DB.setExpenses(currentCompany, DB.expenses(currentCompany).filter(x => x.id !== id)); renderAllTables(); }
 
     // ================================================================
-    //  DOCUMENT PREVIEW & PDF GENERATION
+    //  DOCUMENT PREVIEW & PDF
     // ================================================================
     function openDocumentPreview(title, doc, printMode = false) {
       const client = getClient(currentCompany, doc.clientId); if (!client) { alert('Client not found.'); return; }
@@ -2139,7 +2317,9 @@
           
           <div style="display:flex;justify-content:center;gap:16px;margin-top:20px;flex-wrap:wrap;">
             ${actionButtons}
-            <button class="btn btn-primary" onclick="generatePDF('${title}', '${doc.ref}')"><i class="fas fa-file-pdf"></i> Download PDF</button>
+            <button class="btn btn-primary" onclick="downloadPDFDirect('${title}', '${doc.ref || doc.id}')">
+              <i class="fas fa-file-pdf"></i> Download PDF
+            </button>
             <button class="btn btn-outline" onclick="closeModal()"><i class="fas fa-times"></i> Close</button>
           </div>
         </div>
@@ -2147,42 +2327,40 @@
       openModal(title + ' Preview', html);
     }
 
-    function generatePDF(title, ref) {
+    function downloadPDFDirect(title, ref) {
       const element = document.getElementById('docA4');
+      if (!element) { showToast('Document not found', 'error'); return; }
+
+      const safeRef = String(ref || 'DOC').replace(/[^a-zA-Z0-9_-]/g, '_');
+      const safeTitle = title.replace(/\s+/g, '_');
+      const filename = `${safeTitle}_${safeRef}.pdf`;
+
       const opt = {
         margin: 0,
-        filename: `${title.replace(/\s+/g, '_')}_${ref}.pdf`,
+        filename: filename,
         image: { type: 'jpeg', quality: 0.98 },
-        html2canvas: { scale: 2 },
+        html2canvas: { scale: 2, useCORS: true, backgroundColor: '#ffffff' },
         jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
       };
 
-      // Generate PDF and show preview
-      html2pdf().set(opt).from(element).toPdf().get('pdf').then(function(pdf) {
-        const totalPages = pdf.internal.getNumberOfPages();
-        // Convert first page to image for preview
-        const canvas = document.createElement('canvas');
-        html2canvas(element, { scale: 2 }).then(c => {
-          const imgData = c.toDataURL('image/jpeg');
-          document.getElementById('pdfPreviewImage').src = imgData;
-          document.getElementById('pdfPreviewOverlay').classList.add('visible');
-          
-          // Setup download button
-          document.getElementById('downloadPdfBtn').onclick = function() {
-            html2pdf().set(opt).from(element).save();
-            closePdfPreview();
-          };
+      showToast('Generating PDF… please wait');
+
+      html2pdf().set(opt).from(element).save()
+        .then(() => {
+          playSuccessSound();
+          showToast(`✅ ${filename} saved to Downloads`, 'success');
+          addSylviaMessage(`📥 ${title} ${ref} downloaded successfully.`);
+        })
+        .catch(err => {
+          console.error(err);
+          showToast('Download failed — try again', 'error');
         });
-      });
     }
 
     function closePdfPreview() {
       document.getElementById('pdfPreviewOverlay').classList.remove('visible');
     }
 
-    // ================================================================
-    //  PROFORMA TO INVOICE/RECEIPT CONVERSION
-    // ================================================================
     function convertProformaToInvoice(proformaId) {
       const p = DB.proformas(currentCompany).find(x => x.id === proformaId);
       if (!p) return;
@@ -2203,15 +2381,13 @@
         amountInWords: p.amountInWords,
         company: currentCompany,
         currency: p.currency,
-        parentProforma: p.ref, // Link to parent
+        parentProforma: p.ref,
         createdAt: new Date().toISOString()
       };
 
       let list = DB.invoices(currentCompany);
       list.push(invoiceData);
       DB.setInvoices(currentCompany, list);
-      
-      // Update Proforma status to Paid (assuming Invoice creation means it's processed)
       updateProformaStatus(proformaId, 'paid');
 
       closeModal();
@@ -2232,21 +2408,19 @@
         clientId: p.clientId,
         date: today(),
         ref: ref,
-        invoiceRef: p.ref, // Link to parent Proforma
+        invoiceRef: p.ref,
         amount: p.grandTotal,
-        method: 'Bank Transfer', // Default
+        method: 'Bank Transfer',
         company: currentCompany,
         currency: p.currency,
         amountInWords: p.amountInWords,
-        parentProforma: p.ref, // Link to parent
+        parentProforma: p.ref,
         createdAt: new Date().toISOString()
       };
 
       let list = DB.receipts(currentCompany);
       list.push(receiptData);
       DB.setReceipts(currentCompany, list);
-      
-      // Update Proforma status to Paid
       updateProformaStatus(proformaId, 'paid');
 
       closeModal();
@@ -2313,86 +2487,27 @@
     }
 
     // ================================================================
-    //  AUTO-SYNC TO GITHUB (Requires User Setup)
-    // ================================================================
-    async function syncToGitHub() {
-      const token = localStorage.getItem('github_token');
-      if (!token) return;
-      
-      const repo = 'kabinijuguna/sylvia-app';
-      const path = 'index.html';
-      const url = `https://api.github.com/repos/${repo}/contents/${path}`;
-      
-      try {
-        const getRes = await fetch(url, { headers: { Authorization: `token ${token}` } });
-        if (!getRes.ok) throw new Error('Failed to fetch repo info');
-        const fileData = await getRes.json();
-        const sha = fileData.sha;
-
-        const htmlContent = document.documentElement.outerHTML;
-        const base64Content = btoa(unescape(encodeURIComponent(htmlContent)));
-
-        const putRes = await fetch(url, {
-          method: 'PUT',
-          headers: {
-            Authorization: `token ${token}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            message: 'Auto-sync from Sylvia App',
-            content: base64Content,
-            sha: sha
-          })
-        });
-
-        if (putRes.ok) {
-          console.log('✅ Successfully synced to GitHub!');
-          addSylviaMessage('☁️ System automatically backed up to GitHub.');
-        } else {
-          console.warn('GitHub sync failed');
-        }
-      } catch (e) {
-        console.warn('GitHub Sync Error:', e);
-      }
-    }
-
-    let syncTimeout;
-    function triggerSync() {
-      clearTimeout(syncTimeout);
-      syncTimeout = setTimeout(syncToGitHub, 5000);
-    }
-
-    const originalSet = DB.set.bind(DB);
-    DB.set = function(company, key, val) {
-      originalSet(company, key, val);
-      triggerSync();
-    };
-
-    // ================================================================
-    //  GITHUB TOKEN UI LOGIC
+    //  GITHUB TOKEN UI
     // ================================================================
     function saveGithubToken() {
       const input = document.getElementById('githubTokenInput');
-      // Use the token you provided as the default value in the prompt if it's empty
       let token = input.value.trim();
       if (!token) {
-        token = prompt("Please enter your GitHub Personal Access Token (PAT).\n\n(Note: For security, never hardcode this in the public code. The app will save it to your device only.)");
+        token = prompt("Please enter your GitHub Personal Access Token (PAT).\n\nScope needed: Contents = Read & Write for the sylvia-app repo.");
       }
-      
       if (!token) return;
-      
       localStorage.setItem('github_token', token);
-      input.value = ''; // Clear for security
+      input.value = '';
       updateGithubTokenStatus();
-      
       speakText("GitHub token saved successfully. Auto-sync is now active.");
       addSylviaMessage('☁️ GitHub Auto-Sync is now ACTIVE.');
+      // Immediate first push so remote gets set up
+      setTimeout(forcePush, 500);
     }
 
     function updateGithubTokenStatus() {
       const statusEl = document.getElementById('githubTokenStatus');
       if (!statusEl) return;
-      
       const token = localStorage.getItem('github_token');
       if (token) {
         statusEl.innerHTML = '🟢 Active - Connected to GitHub';
@@ -2401,6 +2516,13 @@
         statusEl.innerHTML = '🔴 Inactive - No token provided';
         statusEl.style.color = '#e74c3c';
       }
+    }
+
+    function logoutSystem() {
+      if (!confirm('Logout? Your data stays saved. Token will be removed from this device.')) return;
+      localStorage.removeItem('github_token');
+      updateGithubTokenStatus();
+      showToast('Logged out. Refresh to re-authenticate.');
     }
 
     setTimeout(updateGithubTokenStatus, 1000);
@@ -2422,7 +2544,7 @@
     document.querySelectorAll('select[id$="currency"]').forEach(sel => { sel.value = DB.currency(); });
 
     addSylviaMessage('👋 Hi! I\'m Sylvia. Say my name to start voice commands.');
-    console.log('🧠 Sylvia AI · v9.0 · Parent/Child Docs, Item Catalog, PDF, AI Advisor, Auto-Sync enabled.');
+    console.log('🧠 Sylvia AI · v9.1 · Multi-device sync, PDF download to device, success sound.');
 
     setTimeout(() => {
       if (window.speechSynthesis) {
