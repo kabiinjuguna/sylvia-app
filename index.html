@@ -799,7 +799,8 @@
     //  GITHUB GIST SYNC (SIMPLE & RELIABLE)
     // ================================================================
     const GITHUB_CONFIG = {
-      gistId: ec0cbf41146e8b132fbc6a48c60b5c59, // <--- PASTE YOUR ID HERE
+      // ⚠️ PASTE YOUR GIST ID HERE (e.g., '1234567890abcdef1234567890abcdef')
+      gistId: 'ec0cbf41146e8b132fbc6a48c60b5c59', 
     };
     let syncInProgress = false;
     let pushTimeout = null;
@@ -824,7 +825,7 @@
       const token = localStorage.getItem('github_token');
       if (!token) return false;
       if (!GITHUB_CONFIG.gistId || GITHUB_CONFIG.gistId === 'PASTE_YOUR_GIST_ID_HERE') {
-        showToast('Please enter your Gist ID in the code', 'error');
+        if (force) showToast('Please enter your Gist ID in the code', 'error');
         return false;
       }
       if (syncInProgress && !force) return false;
@@ -895,6 +896,7 @@
         const remoteTimestamp = decoded.__timestamp;
         const lastPush = localStorage.getItem('sylvia_last_push');
 
+        // Prevent overwriting local changes if our push is newer
         if (lastPush && remoteTimestamp < lastPush) return false;
 
         // Apply all keys to localStorage
