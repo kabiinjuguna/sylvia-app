@@ -17,7 +17,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
   <style>
-    /* ===== RESET & VARIABLES ===== */
     :root {
       --bg: #f0f4fc;
       --bg-card: rgba(255,255,255,0.7);
@@ -343,7 +342,7 @@
       <div class="logo-wrap" id="logoDisplay"><span>IM</span></div>
       <div>
         <h1>Sylvia<span>.</span></h1>
-        <small>ISLE MEDIA · v9.1</small>
+        <small>ISLE MEDIA · v9.2</small>
       </div>
     </div>
 
@@ -372,7 +371,7 @@
       <a href="#" data-page="settings"><i class="fas fa-cog"></i> Settings</a>
     </nav>
     <div class="sidebar-footer">
-      <span class="training-badge"><i class="fas fa-microchip"></i> Sylvia AI · v9.1</span>
+      <span class="training-badge"><i class="fas fa-microchip"></i> Sylvia AI · v9.2</span>
     </div>
   </aside>
 
@@ -797,7 +796,7 @@
     })();
 
     // ================================================================
-    //  GITHUB MULTI-DEVICE SYNC (data JSON, not HTML)
+    //  GITHUB MULTI-DEVICE SYNC (DATA JSON)
     // ================================================================
     const GITHUB_CONFIG = {
       owner: 'kabinijuguna',
@@ -828,60 +827,84 @@
       const token = localStorage.getItem('github_token');
       if (!token) return false;
       if (syncInProgress && !force) return false;
+      
       syncInProgress = true;
       setSyncIndicator('syncing');
 
       const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}`;
-      try {
-        // 1. Get existing sha (if file exists)
-        let sha = null;
-        const getRes = await fetch(url + '?ref=' + GITHUB_CONFIG.branch, { headers: getGithubHeaders(token) });
-        if (getRes.ok) {
-          const fileData = await getRes.json();
-          sha = fileData.sha;
-        }
+      
+      // We try up to 3 times if there is a version conflict
+      let attempts = 0;
+      while (attempts < 3) {
+        try {
+          // 1. Get the absolute latest SHA from GitHub
+          let sha = null;
+          const getRes = await fetch(url + '?ref=' + GITHUB_CONFIG.branch + '&t=' + Date.now(), { 
+            headers: getGithubHeaders(token) 
+          });
+          if (getRes.ok) {
+            const fileData = await getRes.json();
+            sha = fileData.sha;
+          }
 
-        // 2. Build payload
-        const data = {
-          __version: 1,
-          __timestamp: new Date().toISOString(),
-          __device: navigator.userAgent.slice(0, 80),
-          data: collectAllLocalData()
-        };
-        const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+          // 2. Build payload
+          const data = {
+            __version: 1,
+            __timestamp: new Date().toISOString(),
+            __device: navigator.userAgent.slice(0, 80),
+            data: collectAllLocalData()
+          };
+          const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
 
-        // 3. PUT file
-        const body = {
-          message: `Auto-sync from Sylvia App (${new Date().toISOString().slice(0,16).replace('T',' ')})`,
-          content: content,
-          branch: GITHUB_CONFIG.branch
-        };
-        if (sha) body.sha = sha;
+          // 3. PUT file
+          const body = {
+            message: `Auto-sync from Sylvia App (${new Date().toISOString().slice(0,16).replace('T',' ')})`,
+            content: content,
+            branch: GITHUB_CONFIG.branch
+          };
+          if (sha) body.sha = sha;
 
-        const putRes = await fetch(url, {
-          method: 'PUT',
-          headers: { ...getGithubHeaders(token), 'Content-Type': 'application/json' },
-          body: JSON.stringify(body)
-        });
+          const putRes = await fetch(url, {
+            method: 'PUT',
+            headers: { ...getGithubHeaders(token), 'Content-Type': 'application/json' },
+            body: JSON.stringify(body)
+          });
 
-        if (putRes.ok) {
-          localStorage.setItem('sylvia_last_push', new Date().toISOString());
-          updateSyncStatusText('Pushed');
-          setSyncIndicator('ok');
-          return true;
-        } else {
-          const err = await putRes.text();
-          console.warn('Push failed:', err);
+          if (putRes.ok) {
+            localStorage.setItem('sylvia_last_push', new Date().toISOString());
+            updateSyncStatusText('Pushed');
+            setSyncIndicator('ok');
+            syncInProgress = false;
+            return true;
+          } else {
+            const err = await putRes.json();
+            
+            // If it's a 409 Conflict or 422, wait 1 second and try again!
+            if (putRes.status === 409 || putRes.status === 422) {
+              console.warn(`Sync conflict detected (attempt ${attempts + 1}). Retrying...`);
+              attempts++;
+              await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 sec
+              continue; // Try again
+            } else {
+              console.warn('Push failed:', err);
+              setSyncIndicator('error');
+              syncInProgress = false;
+              return false;
+            }
+          }
+        } catch(e) {
+          console.warn('Push error:', e);
           setSyncIndicator('error');
+          syncInProgress = false;
           return false;
         }
-      } catch(e) {
-        console.warn('Push error:', e);
-        setSyncIndicator('error');
-        return false;
-      } finally {
-        syncInProgress = false;
       }
+      
+      // If we exhaust all retries
+      console.warn('Sync failed after multiple conflict retries.');
+      setSyncIndicator('error');
+      syncInProgress = false;
+      return false;
     }
 
     async function pullFromGitHub() {
@@ -2544,7 +2567,7 @@
     document.querySelectorAll('select[id$="currency"]').forEach(sel => { sel.value = DB.currency(); });
 
     addSylviaMessage('👋 Hi! I\'m Sylvia. Say my name to start voice commands.');
-    console.log('🧠 Sylvia AI · v9.1 · Multi-device sync, PDF download to device, success sound.');
+    console.log('🧠 Sylvia AI · v9.2 · Multi-device sync, PDF download to device, success sound.');
 
     setTimeout(() => {
       if (window.speechSynthesis) {
