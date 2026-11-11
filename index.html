@@ -823,7 +823,7 @@
       return dump;
     }
 
-        async function pushToGitHub(force) {
+            async function pushToGitHub(force) {
       const token = localStorage.getItem('github_token');
       if (!token) return false;
       if (syncInProgress && !force) return false;
@@ -909,14 +909,6 @@
         }
       }
       
-      setSyncIndicator('error');
-      syncInProgress = false;
-      return false;
-    }
-      }
-      
-      // If we exhaust all retries
-      console.warn('Sync failed after multiple conflict retries.');
       setSyncIndicator('error');
       syncInProgress = false;
       return false;
