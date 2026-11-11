@@ -544,6 +544,19 @@
 
     <section class="page" id="page-settings">
       <div class="page-header"><h3><i class="fas fa-cog"></i> Settings</h3></div>
+
+      <!-- GITHUB AUTO-SYNC SETUP -->
+      <div class="stat-card" style="min-height:auto; margin-bottom: 20px; border-color: rgba(1,167,157,0.3);">
+        <div class="label" style="color: var(--accent);"><i class="fas fa-cloud-upload-alt"></i> GitHub Auto-Sync Setup</div>
+        <p style="font-size:0.75rem; color:var(--text-muted); margin-top: 6px; margin-bottom: 10px;">Paste your GitHub Personal Access Token (PAT) below to allow the app to save changes automatically to your GitHub repository.</p>
+        
+        <div style="display:flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+          <input type="password" id="githubTokenInput" placeholder="ghp_xxxxxxxxxxxxxxxxxxxx" style="flex: 1; min-width: 200px; padding: 12px; border-radius: 12px; border: 1px solid var(--border); background: var(--bg-card); color: var(--text); font-family: monospace;" />
+          <button class="btn btn-primary" onclick="saveGithubToken()"><i class="fas fa-save"></i> Save Token</button>
+        </div>
+        
+        <p id="githubTokenStatus" style="font-size:0.75rem; margin-top: 10px; font-weight: 600;">Status: Checking...</p>
+      </div>
       
       <div class="stat-card" style="min-height:auto; margin-bottom: 20px;">
         <div class="label">Select Sylvia's Voice</div>
@@ -2302,32 +2315,23 @@
     // ================================================================
     //  AUTO-SYNC TO GITHUB (Requires User Setup)
     // ================================================================
-    // NOTE: To enable auto-sync, you must provide a GitHub Personal Access Token (PAT).
-    // Store it securely in localStorage (e.g., githubToken). 
-    // The system will then push the updated index.html to your repo.
     async function syncToGitHub() {
       const token = localStorage.getItem('github_token');
-      if (!token) {
-        console.log('GitHub sync disabled: No token found.');
-        return;
-      }
+      if (!token) return;
       
-      const repo = 'kabinijuguna/sylvia-app'; // Your repo
+      const repo = 'kabinijuguna/sylvia-app';
       const path = 'index.html';
       const url = `https://api.github.com/repos/${repo}/contents/${path}`;
       
       try {
-        // 1. Get current file SHA
         const getRes = await fetch(url, { headers: { Authorization: `token ${token}` } });
         if (!getRes.ok) throw new Error('Failed to fetch repo info');
         const fileData = await getRes.json();
         const sha = fileData.sha;
 
-        // 2. Prepare content (Base64 encode the current HTML)
         const htmlContent = document.documentElement.outerHTML;
         const base64Content = btoa(unescape(encodeURIComponent(htmlContent)));
 
-        // 3. Commit update
         const putRes = await fetch(url, {
           method: 'PUT',
           headers: {
@@ -2352,19 +2356,54 @@
       }
     }
 
-    // Trigger sync on data changes (debounced)
     let syncTimeout;
     function triggerSync() {
       clearTimeout(syncTimeout);
-      syncTimeout = setTimeout(syncToGitHub, 5000); // Sync 5 seconds after last change
+      syncTimeout = setTimeout(syncToGitHub, 5000);
     }
 
-    // Override DB.set to trigger sync
     const originalSet = DB.set.bind(DB);
     DB.set = function(company, key, val) {
       originalSet(company, key, val);
       triggerSync();
     };
+
+    // ================================================================
+    //  GITHUB TOKEN UI LOGIC
+    // ================================================================
+    function saveGithubToken() {
+      const input = document.getElementById('githubTokenInput');
+      // Use the token you provided as the default value in the prompt if it's empty
+      let token = input.value.trim();
+      if (!token) {
+        token = prompt("Please enter your GitHub Personal Access Token (PAT).\n\n(Note: For security, never hardcode this in the public code. The app will save it to your device only.)");
+      }
+      
+      if (!token) return;
+      
+      localStorage.setItem('github_token', token);
+      input.value = ''; // Clear for security
+      updateGithubTokenStatus();
+      
+      speakText("GitHub token saved successfully. Auto-sync is now active.");
+      addSylviaMessage('☁️ GitHub Auto-Sync is now ACTIVE.');
+    }
+
+    function updateGithubTokenStatus() {
+      const statusEl = document.getElementById('githubTokenStatus');
+      if (!statusEl) return;
+      
+      const token = localStorage.getItem('github_token');
+      if (token) {
+        statusEl.innerHTML = '🟢 Active - Connected to GitHub';
+        statusEl.style.color = '#2ecc71';
+      } else {
+        statusEl.innerHTML = '🔴 Inactive - No token provided';
+        statusEl.style.color = '#e74c3c';
+      }
+    }
+
+    setTimeout(updateGithubTokenStatus, 1000);
 
     // ================================================================
     //  INIT
