@@ -1,11 +1,5 @@
 {
   "__version": 1,
-  "__timestamp": "2026-11-11T14:58:30.206Z",
-  "__device": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like ",
-  "data": {
-    "sylvia_last_push": "2026-11-11T14:55:57.613Z",
-    "sylvia_last_pull_time": "2026-11-11T14:55:56.325Z",
-    "sylvia_last_pull_sha": "9dacebf68c3f46656aed762052a8811ecc1e0c53",
-    "sylvia_global_currentCompany": "islemedia"
-  }
+  "__timestamp": "2026-01-01T00:00:00.000Z",
+  "data": {}
 }
