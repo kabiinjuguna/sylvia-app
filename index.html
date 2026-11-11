@@ -802,7 +802,7 @@
       owner: 'kabinijuguna',
       repo: 'sylvia-app',
       dataFile: 'sylvia_data.json',
-      branch: 'master'
+      branch: 'main'
     };
     let syncInProgress = false;
     let pushTimeout = null;
@@ -823,7 +823,7 @@
       return dump;
     }
 
-            async function pushToGitHub(force) {
+    async function pushToGitHub(force) {
       const token = localStorage.getItem('github_token');
       if (!token) return false;
       if (syncInProgress && !force) return false;
@@ -831,31 +831,23 @@
       syncInProgress = true;
       setSyncIndicator('syncing');
 
-      // Ensure we are using the correct branch
       const url = `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/contents/${GITHUB_CONFIG.dataFile}`;
       
+      // We try up to 3 times if there is a version conflict
       let attempts = 0;
       while (attempts < 3) {
         try {
-          // 1. Try to get the file's SHA (if it exists)
+          // 1. Get the absolute latest SHA from GitHub
           let sha = null;
           const getRes = await fetch(url + '?ref=' + GITHUB_CONFIG.branch + '&t=' + Date.now(), { 
             headers: getGithubHeaders(token) 
           });
-          
           if (getRes.ok) {
             const fileData = await getRes.json();
             sha = fileData.sha;
-          } else if (getRes.status !== 404) {
-             // If it's not a 404, we have a bigger problem (like bad token)
-             const err = await getRes.json();
-             console.error("GitHub GET Error:", err);
-             setSyncIndicator('error');
-             syncInProgress = false;
-             return false;
           }
 
-          // 2. Build the data to push
+          // 2. Build payload
           const data = {
             __version: 1,
             __timestamp: new Date().toISOString(),
@@ -864,15 +856,13 @@
           };
           const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
 
-          // 3. Push the file (Create if new, Update if exists)
+          // 3. PUT file
           const body = {
             message: `Auto-sync from Sylvia App (${new Date().toISOString().slice(0,16).replace('T',' ')})`,
             content: content,
             branch: GITHUB_CONFIG.branch
           };
-          
-          // ONLY add 'sha' if the file actually exists on GitHub
-          if (sha) body.sha = sha; 
+          if (sha) body.sha = sha;
 
           const putRes = await fetch(url, {
             method: 'PUT',
@@ -888,27 +878,30 @@
             return true;
           } else {
             const err = await putRes.json();
-            console.error("GitHub PUT Error Details:", err); // <--- THIS WILL SHOW THE REAL ERROR
             
+            // If it's a 409 Conflict or 422, wait 1 second and try again!
             if (putRes.status === 409 || putRes.status === 422) {
               console.warn(`Sync conflict detected (attempt ${attempts + 1}). Retrying...`);
               attempts++;
-              await new Promise(resolve => setTimeout(resolve, 1000)); 
-              continue; 
+              await new Promise(resolve => setTimeout(resolve, 1000)); // Wait 1 sec
+              continue; // Try again
             } else {
+              console.warn('Push failed:', err);
               setSyncIndicator('error');
               syncInProgress = false;
               return false;
             }
           }
         } catch(e) {
-          console.error('Push error:', e);
+          console.warn('Push error:', e);
           setSyncIndicator('error');
           syncInProgress = false;
           return false;
         }
       }
       
+      // If we exhaust all retries
+      console.warn('Sync failed after multiple conflict retries.');
       setSyncIndicator('error');
       syncInProgress = false;
       return false;
